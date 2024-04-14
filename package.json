@@ -1,0 +1,31 @@
+{
+  "name": "qubicproxypool",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "",
+  "main": "serve.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "start": "node serve.js",
+    "dev": "nodemon serve.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "crypto",
+    "qubic"
+  ],
+  "author": "darkridder",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "express": "^4.18.3",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
+    "pino": "^8.19.0",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
