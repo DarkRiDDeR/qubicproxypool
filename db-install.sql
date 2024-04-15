@@ -19,6 +19,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `users` (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
     login VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(64) NOT NULL,
     wallet VARCHAR(60),
     reset VARCHAR(64)  DEFAULT NULL,
