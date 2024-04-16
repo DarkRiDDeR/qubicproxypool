@@ -1,0 +1,35 @@
+extends ../_layout/default.pug
+
+block styles
+
+block scripts
+  if !starter
+    // Plugins and scripts required by this view
+    script(src='node_modules/@coreui/utils/dist/umd/index.js')
+    script(src='js/main.js')
+
+block breadcrumb
+    +breadcrumb(
+    [
+      { href: '/', label: 'Home'},
+      { label: 'Profile'}
+    ]
+  )
+
+block view
+  .row
+    .col-md-12
+      h1 Profile
+      .mb-4
+        .table-responsive
+          table.table.table-striped.border.mb-0
+            tbody
+              tr
+                td(scope="row") Username:
+                td jhonminer 
+              tr 
+                td(scope="row") Email:
+                td jhon@yahoo.com
+              tr 
+                td(scope="row") Qubic wallet: 
+                td KNIJXAGWQREUSFCFOHGRBAZNAQZAILFQBPFRVWPOECGPFNATPBDOCWUCZKMN

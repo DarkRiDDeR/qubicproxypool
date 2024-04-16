@@ -1,0 +1,59 @@
+extends ../_layout/default.pug
+
+block styles
+
+block scripts
+  if !starter
+    // Plugins and scripts required by this view
+    script(src='node_modules/@coreui/utils/dist/umd/index.js')
+    script(src='js/main.js')
+
+block breadcrumb
+    +breadcrumb(
+    [
+      { href: '/', label: 'Home'},
+      { label: 'Instruction'}
+    ]
+  )
+
+block view
+  .row
+    .col-md-12
+      h1 Instruction
+      | Miner: 
+      a.link-info(href="https://github.com/qubic-li/client" target="_blank")
+        | https://github.com/qubic-li/client (qubic.li - Client)
+      br
+      br
+      .card.mb-4
+        .card-body
+          h3 accessToken
+          p eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImExMmVmOWU5LTMxMTYtNGFjYS1iNTVlLTFkNjQxN2ViNzI1ZSIsIk1pbmluZyI6IiIsIm5iZiI6MTcxMjc1NDc1NSwiZXhwIjoxNzQ0MjkwNzU1LCJpYXQiOjE3MTI3NTQ3NTUsImlzcyI6Imh0dHBzOi8vcXViaWMubGkvIiwiYXVkIjoiaHR0cHM6Ly9xdWJpYy5saS8ifQ.yGk9gPm1vtaqqw-5ePI7EtU4NtLReGQS1A2OGW2tHYVwpR3WqUpNLmdw9XQkhyyj2nivwYU4-a8p35JAmz8TMw
+          h3 alias
+          p specify your alias as the username and worker name separated by a dot:
+          p 
+            b username.worker
+          p or three underscores:
+          p
+            b username___worker
+
+      h2 Recommendations
+      .card.mb-4
+        .card-body
+          p Linux-based operating systems have proven to be the best for mining Qubic. It is recommended to install as Systemd Linux Service
+          p For maximum CPU performance, you should enable hypertrading in the BIOS and configure the maximum number of threads in the "Threads" parameter.
+
+      h2 Error where not all solutions were sent to the pool
+      .card.mb-4
+        .card-body
+          p If you see more sols locally than on the pool, try the following procedure:
+          ul 
+            li stop the client
+            li backup the stats.#{"<epoch number>"}.lock file
+            li open the file stats.#{"<epoch number>"}.lock in any text editor (windows: notepad; linux: vim, nano)
+            li replace all “Submitted”: true with “Submitted”: false
+            li start your client
+          p If there were decisions that were not taken into account before, they should be taken into account after some time. In this case, the client must be the latest version.
+
+    // /.col
+  // /.row

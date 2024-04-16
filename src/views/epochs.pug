@@ -1,0 +1,78 @@
+extends ../_layout/default.pug
+
+block styles
+
+block scripts
+  if !starter
+    // Plugins and scripts required by this view
+    script(src='node_modules/@coreui/utils/dist/umd/index.js')
+    script(src='js/main.js')
+
+block breadcrumb
+    +breadcrumb(
+    [
+      { href: '/', label: 'Home'},
+      { label: 'Epochs'}
+    ]
+  )
+
+block view
+  .row
+    .col-md-12
+      .container
+        .row.align-items-center
+          div.col-auto
+            | Epoch number: 
+          form(action="").col-auto
+            select.form-select(value='101')
+              option(value='100') 100
+              option(value='101' selected) 101
+      br
+      br
+      h1 Epoch 101
+      .card.mb-4
+        .table-responsive
+            table.table.table-striped.border.mb-0
+              thead.fw-semibold.text-nowrap
+                tr.align-middle
+                  th.bg-body-secondary Miner
+                  th.bg-body-secondary(title="Average hashrate in the epoch") Avg. hashrate
+                  th.bg-body-secondary Solutions
+                  th.bg-body-secondary(title="Percentage of total contribution") Prct. (PPSTI)
+                  th.bg-body-secondary Qubic payout
+              tbody
+                tr.align-middle
+                  td
+                    | Us******
+                  td
+                    | 55 It/s
+                  td
+                    | 1 
+                  td
+                    | 15%
+                  td
+                    | 1500000
+                tr.align-middle
+                  td
+                    | fd******
+                  td
+                    | 55 It/s
+                  td
+                    | 1 
+                  td
+                    | 15%
+                  td
+                    | 1500000
+                tr.align-middle
+                  td
+                    | sy******
+                  td
+                    | 55 It/s
+                  td
+                    | 1 
+                  td
+                    | 15%
+                  td
+                    | 1500000
+    // /.col
+  // /.row

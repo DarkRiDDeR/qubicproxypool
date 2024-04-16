@@ -1,0 +1,193 @@
+extends ../_layout/default.pug
+
+block styles
+
+block scripts
+  if !starter
+    // Plugins and scripts required by this view
+    script(src='node_modules/@coreui/utils/dist/umd/index.js')
+    script(src='js/main.js')
+
+block breadcrumb
+    +breadcrumb(
+    [
+      { href: '/', label: 'Home'},
+      { label: 'Calculate'}
+    ]
+  )
+
+block view
+  .row
+    .col-md-12
+      .mb-4
+        .progress(style='height: 3rem; font-size: 1.8em; font-weight: bold; background-color: rgb(50, 58, 73)')
+          .progress-bar.bg-info.progress-bar.progress-bar-striped.progress-bar-animated(id="epoch-progress" role='progressbar' style='width: 10%; overflow: visible;' aria-valuenow='50' aria-valuemin='0' aria-valuemax='100')
+            span(style="margin: 0.5em;") Qubic epoch
+              | 
+              span.value 101: 53.5%
+      .mb-4
+        .table-responsive
+            table.table.table-striped.border.mb-0
+              thead.fw-semibold.text-nowrap
+                tr.align-middle
+                  th.bg-body-secondary Alias
+                  th.bg-body-secondary(title="Average hashrate in the epoch") Avg. hashrate
+                  th.bg-body-secondary(title="Solutions") Sol
+                  th.bg-body-secondary.text-center Activity in the epoch
+                  th.bg-body-secondary.text-center Status
+                  th.bg-body-secondary Last active
+              tbody
+                tr.align-middle
+                  td
+                    .text-nowrap Yiorgos Avraamu
+                  td
+                    | 55 It/s
+                  td
+                    | 1 
+                  td
+                    .d-flex.justify-content-between.align-items-baseline
+                      .fw-semibold 50%
+                      .text-nowrap.small.text-body-secondary.ms-3 Jun 11, 2023 - Jul 10, 2023
+                    .progress.progress-thin
+                      .progress-bar.bg-danger(role='progressbar', style='width: 50%', aria-valuenow='50', aria-valuemin='0', aria-valuemax='100')
+                  td.text-center
+                    <span class="badge me-1 bg-danger">Danger</span>
+                  td
+                    .fw-semibold.text-nowrap 	23.03.2024 04:02
+                tr.align-middle
+                  td
+                    .text-nowrap Avram Tarasios
+                  td
+                    | 55 It/s
+                  td
+                    | 1 
+                  td
+                    .d-flex.justify-content-between.align-items-baseline
+                      .fw-semibold 0%
+                      .text-nowrap.small.text-body-secondary.ms-3 Jun 11, 2023 - Jul 10, 2023
+                    .progress.progress-thin
+                      .progress-bar.bg-info(role='progressbar', style='width: 0%', aria-valuenow='0', aria-valuemin='0', aria-valuemax='100')
+                  td.text-center
+                    <span class="badge me-1 bg-dark">Dead</span>
+                  td
+                    .fw-semibold.text-nowrap 	23.03.2024 04:02
+                tr.align-middle
+                  td
+                    .text-nowrap Quintin Ed
+                  td
+                    | 55 It/s
+                  td
+                    | 1 
+                  td
+                    .d-flex.justify-content-between.align-items-baseline
+                      .fw-semibold 74%
+                      .text-nowrap.small.text-body-secondary.ms-3 Jun 11, 2023 - Jul 10, 2023
+                    .progress.progress-thin
+                      .progress-bar.bg-warning(role='progressbar', style='width: 74%', aria-valuenow='74', aria-valuemin='0', aria-valuemax='100')
+                  td.text-center
+                    <span class="badge me-1 bg-warning">Warning</span>
+                  td
+                    .fw-semibold.text-nowrap 	23.03.2024 04:02
+                tr.align-middle
+                  td
+                    .text-nowrap Enéas Kwadwo
+                  td
+                    | 55 It/s
+                  td
+                    | 1 
+                  td
+                    .d-flex.justify-content-between.align-items-baseline
+                      .fw-semibold 98%
+                      .text-nowrap.small.text-body-secondary.ms-3 Jun 11, 2023 - Jul 10, 2023
+                    .progress.progress-thin
+                      .progress-bar.bg-success(role='progressbar', style='width: 98%', aria-valuenow='98', aria-valuemin='0', aria-valuemax='100')
+                  td.text-center
+                    <span class="badge me-1 bg-success">Success</span>
+                  td
+                    .fw-semibold.text-nowrap 	23.03.2024 04:02
+      .mb-4    
+        h2 Miners
+        .table-responsive
+            table.table.table-striped.border.mb-0
+              thead.fw-semibold.text-nowrap
+                tr.align-middle
+                  th.bg-body-secondary Miners
+                  th.bg-body-secondary(title="Average hashrate in the epoch") Avg. hashrate
+                  th.bg-body-secondary(title="Percentage of total contribution") Prct. (PPSTI)
+                  th.bg-body-secondary(title="Solutions") Sol
+                  th.bg-body-secondary(title="Сalculated number of solutions") Calc. sol
+              tbody
+                tr.align-middle
+                  td.text-info 
+                    b User 1
+                  td.text-info
+                    b 921 It/s
+                  td.text-info
+                    b 8.12%
+                  td.text-info
+                    b 3
+                  td.text-info
+                    b 3.2
+                tr.align-middle
+                  //--.table-group-divider
+                  td yt******
+                  td 921 It/s
+                  td 8.12%
+                  td 3
+                  td 3.2
+                tr.align-middle
+                  td Us******
+                  td 921 It/s
+                  td 8.12%
+                  td 3
+                  td 3.2
+                tr.align-middle
+                  td fd******
+                  td 921	It/s
+                  td 8.12%
+                  td 3
+                  td 3.2
+                tr.align-middle
+                  td re******
+                  td 921	It/s
+                  td 8.12%
+                  td 3
+                  td 3.2
+                tr.align-middle
+                  td oi******
+                  td 921	It/s
+                  td 8.12%
+                  td 3
+                  td 3.2
+                tr.align-middle
+                  td po******
+                  td 921	It/s
+                  td 8.12%
+                  td 3
+                  td 3.2
+                tr.align-middle
+                  td Us******
+                  td 921	It/s
+                  td 8.12%
+                  td 3
+                  td 3.2
+                tr.align-middle
+                  td Us******
+                  td 921	It/s
+                  td 8.12%
+                  td 3
+                  td 3.2
+                tr.align-middle
+                  td Us******
+                  td 921	It/s
+                  td 8.12%
+                  td 3
+                  td 3.2
+                tr.align-middle
+                  td Us******
+                  td 921	It/s
+                  td 8.12%
+                  td 3
+                  td 3.2
+    // /.col
+  // /.row

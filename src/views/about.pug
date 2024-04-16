@@ -1,0 +1,24 @@
+extends ../_layout/default.pug
+
+block styles
+
+block scripts
+  if !starter
+    // Plugins and scripts required by this view
+    script(src='node_modules/@coreui/utils/dist/umd/index.js')
+    script(src='js/main.js')
+
+block breadcrumb
+    +breadcrumb(
+    [
+      { href: '/', label: 'Home'},
+      { label: 'About'}
+    ]
+  )
+
+block view
+  .row
+    .col-md-12
+      
+      include ../_partials/about.pug
+      

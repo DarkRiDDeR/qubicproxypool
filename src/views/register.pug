@@ -1,0 +1,44 @@
+extends ../_layout/pages.pug
+
+block view
+  .container
+    .row.justify-content-center
+      .col-md-6
+        .card.mb-4.mx-4
+          .card-body.p-4
+            h1 Register
+            p.text-body-secondary Create your account
+            form.needs-validation.form-reg(method="get" action="api/registration.json")
+              .input-group.mb-3
+                span.input-group-text
+                  svg.icon
+                    use(xlink:href="/vendors/@coreui/icons/free.svg#cil-user")
+                    |
+                    |
+                input.form-control(name="user" type='text', placeholder='Username [0-9A-Za-z, min 5]' pattern="^[\dA-Za-z]+$" minlength="5" required)
+              .input-group.mb-3
+                span.input-group-text
+                  svg.icon
+                    use(xlink:href="/vendors/@coreui/icons/free.svg#cil-envelope-open")
+                    |
+                input.form-control(name="email" type='email', placeholder='Email' required)
+              .input-group.mb-3
+                span.input-group-text
+                  svg.icon
+                    use(xlink:href="/vendors/@coreui/icons/free.svg#cil-lock-locked")
+                    |
+                input.form-control(name="password" type='password', placeholder='Password [min 8]' minlength="8" required)
+              .input-group.mb-4
+                span.input-group-text
+                  svg.icon
+                    use(xlink:href="/vendors/@coreui/icons/free.svg#cil-lock-locked")
+                    |
+                input.form-control(name="password2" type='password', placeholder='Repeat password' required)
+              .input-group.mb-4
+                span.input-group-text
+                  svg.icon
+                    use(xlink:href="/vendors/@coreui/icons/free.svg#cil-wallet")
+                    |
+                input.form-control(name="wallet" type='wallet', placeholder='Qubic wallet [length 60, A-Z]' minlength="60" maxlength="60" pattern="^[A-Z]+$" required)
+              button.btn.btn-block.btn-success(type='submit') Create Account
+
