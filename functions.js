@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto'
 import mysql from 'mysql2/promise'
-import { confDb } from './config.js'
+import { confDb, confEpoch} from './config.js'
 
 export function getPasswordHash(password) {
     return createHash('sha256').update('QubicPowerProxy' + password).digest('hex')
@@ -9,10 +9,23 @@ export function getPasswordHash(password) {
 /**
  * @returns int Timestamp in milliseconds of last Wednesday. Example:  Wed, 13 Mar 2024 12:00:00 GMT = 1710331200
  */
-export function getTimestampOfLastWednesday () {
+export function getTimestampOfLastWednesday() {
     const date = new Date
-    let time = date.getTime() % 604800000
+    let time = date.getTime() % 604800000 + 43200000
     return date.getTime() - time
+}
+
+/**
+ * 
+ * @returns array [epoch, progress]
+ */
+export function getCurrentEpoch() {
+    const date = new Date()
+    let progress = (date.getTime() - confEpoch.timestamp) / 604800000
+    let epoch = Math.floor(progress)
+    progress = progress - epoch
+    epoch += confEpoch.number
+    return [epoch, progress]
 }
 
 /**

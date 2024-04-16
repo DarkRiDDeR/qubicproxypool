@@ -2,8 +2,8 @@
 import { argv } from 'node:process'
 import { stat } from 'node:fs'
 import { match } from 'node:assert'
-import { confLogger, users } from "./config.js"
-import { dbConnect, dbCreateUser } from "./functions.js"
+import { confLogger, confUsers } from "./config.js"
+import { dbConnect, dbCreateUser, getCurrentEpoch, getTimestampOfLastWednesday } from "./functions.js"
 
 /*Launching the Node.js process as:
 node process-args.js one two=three four 
@@ -42,7 +42,7 @@ if (argv[2] == 'install') {
     if (argv.length != 7) {
         console.error('Error: add user command "adduser <login> <email> <password> <wallet>"')
     } else {
-        console.log(dbCreateUser(dbc, argv[3].toLowerCase(), argv[4].toLowerCase(), argv[5], argv[6]))
+        console.log(await dbCreateUser(dbc, argv[3].toLowerCase(), argv[4].toLowerCase(), argv[5], argv[6]))
     }
 } else if (argv[2] == 'getuser' && argv[3]) {
     try {
@@ -53,8 +53,15 @@ if (argv[2] == 'install') {
     } catch (err) {
         console.log(err)
     }
+} else if (argv[2] == 'epoch') {
+    let [epoch, progress] = getCurrentEpoch()
+    progress = Math.round(progress * 10000) / 100
+    let startDate = new Date(getTimestampOfLastWednesday())
+    console.log(`Epoch=${epoch}; Progress: ${progress}%; Start date: ` + startDate.toISOString())
 } else if (argv[2] == 'calculate') {
-    
+
+} else {
+    console.error('Error: command not find')
 }
 
 try {
@@ -62,15 +69,3 @@ try {
 } catch(err) { 
     log.warning('DB end error: ' + err.message)
 }
-
-
-
-
-
-
-/*
-const resDbEnd = dbEnd(dbc)
-if (resDbEnd !== true) {
-    logger.error('DB end error: %s', resDbEnd);
-    process.exit(1)
-}*/
