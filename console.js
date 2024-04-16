@@ -29,7 +29,8 @@ try {
 }
 
 if (argv[2] == 'install') {
-    for(const user of users.initDbUsers) {
+    for(const user of confUsers.initDbUsers) {
+        console.log(user)
         dbCreateUser(dbc, user[0].toLowerCase(), user[1], user[2], user[3])
     }
 } else if (argv[2] == 'sql' && argv[3]) {
