@@ -2,17 +2,17 @@
   .sidebar-header.border-bottom
     //.sidebar-brand(style="height:45px")
       //--svg.sidebar-brand-full(width="88" height="32" alt="CoreUI Logo")
-        use(xlink:href="assets/brand/coreui.svg#full")
+        use(xlink:href="/assets/brand/coreui.svg#full")
         |
       //--svg.sidebar-brand-narrow(width="32" height="32" alt="CoreUI Logo")
-        use(xlink:href="assets/brand/coreui.svg#signet")
+        use(xlink:href="/assets/brand/coreui.svg#signet")
 
-      //img.avatar-img(src='assets/brand/logo.png', alt='Qubic Pool')
+      //img.avatar-img(src='/assets/brand/logo.png', alt='Qubic Pool')
 
     .sidebar-brand
-      img.sidebar-brand-full(src='assets/logo.png', alt='Qubic Proxy Pool', style="height:45px")
+      img.sidebar-brand-full(src='/assets/logo.png', alt='Qubic Proxy Pool', style="height:45px")
         |
-      img.sidebar-brand-narrow(width="32" height="32" src='assets/logo_icon.png' alt='Qubic Proxy Pool')
+      img.sidebar-brand-narrow(width="32" height="32" src='/assets/logo_icon.png' alt='Qubic Proxy Pool')
     button.btn-close.d-lg-none(type='button' data-coreui-dismiss='offcanvas' data-coreui-theme="dark" aria-label='Close' onclick='coreui.Sidebar.getInstance(document.querySelector("#sidebar")).toggle()')
   //--ul.sidebar-nav(data-coreui="navigation" data-simplebar)
     li.nav-item
