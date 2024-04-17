@@ -49,3 +49,10 @@ export function dbCreateUser(dbc, login, email, password, wallet = '') {
     )
 }
 
+export async function dbVerifyUser(dbc, login, password) {
+    const [rows] = await dbc.query(
+        {sql: 'SELECT id FROM users WHERE login = ? AND password = ?', rowsAsArray: true},
+        [login, getPasswordHash(password)]
+    )
+    return rows.length > 0 ? rows[0] : false
+}
