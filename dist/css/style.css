@@ -14028,4 +14028,16 @@ textarea.form-control-lg {
   transform: translate(-50%, 0);
 }
 
+[data-coreui-theme="dark"] .sidebar-brand-public-light {
+  display: block;
+}
+[data-coreui-theme="dark"] .sidebar-brand-public-dark {
+  display: none;
+}
+[data-coreui-theme="light"] .sidebar-brand-public-light {
+  display: none;
+}
+[data-coreui-theme="light"] .sidebar-brand-public-dark {
+  display: block;
+}
 /*# sourceMappingURL=style.css.map */

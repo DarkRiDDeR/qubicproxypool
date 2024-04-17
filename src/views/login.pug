@@ -12,13 +12,13 @@ block view
             .card-body
               h1 Login
               p.text-body-secondary Sign In to your account
-              form.needs-validation.form-auth(method="get" action="api/authorization.json")
+              form.needs-validation.form-auth(method="post" action="?")
                 .input-group.mb-3.has-validation
                   span.input-group-text
                       svg.icon
                         use(xlink:href="/vendors/@coreui/icons/free.svg#cil-user")
                         |
-                  input.form-control(name="user" type='text', placeholder='Username' required)
+                  input.form-control(name="login" type='text', placeholder='Username' required)
                 .input-group.mb-4.has-validation
                   span.input-group-text
                       svg.icon

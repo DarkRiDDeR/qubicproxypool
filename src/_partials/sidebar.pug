@@ -23,249 +23,31 @@
 
   ul.sidebar-nav(data-coreui="navigation" data-simplebar)
     li.nav-item
-      a.nav-link(href='dashboard.html')
+      a.nav-link(href='/panel/')
         svg.nav-icon
           use(xlink:href="/vendors/@coreui/icons/free.svg#cil-speedometer")
         |  Dashboard
-      a.nav-link(href='calc.html')
+      a.nav-link(href='/panel/calc/')
         svg.nav-icon
           use(xlink:href="/vendors/@coreui/icons/free.svg#cil-description")
         |  Calculate
         //--span.badge.badge-sm.bg-info.ms-auto NEW
-    li.nav-item
-      a.nav-link(href='epochs.html')
+    //li.nav-item
+      a.nav-link(href='/panel/epochs/')
         svg.nav-icon
           use(xlink:href="/vendors/@coreui/icons/free.svg#cil-chart-pie")
         |  Epochs
     li.nav-item
-      a.nav-link(href='instruction.html')
+      a.nav-link(href='/panel/instruction/')
         svg.nav-icon
           use(xlink:href="/vendors/@coreui/icons/free.svg#cil-notes")
         |  Instruction
         span.badge.badge-sm.bg-info.ms-auto
     li.nav-item
-      a.nav-link(href='about.html')
+      a.nav-link(href='/panel/about/')
         svg.nav-icon
           use(xlink:href="/vendors/@coreui/icons/free.svg#cil-info")
         |  About
         span.badge.badge-sm.bg-info.ms-auto
-    //-li.nav-title
-      | Components
-    //--li.nav-group
-      a.nav-link.nav-group-toggle(href='#')
-        svg.nav-icon
-          use(xlink:href="/vendors/@coreui/icons/free.svg#cil-puzzle")
-        |  Base
-      ul.nav-group-items.compact
-        li.nav-item
-          a.nav-link(href='base/accordion.html')
-            span.nav-icon
-              span.nav-icon-bullet
-            |  Accordion
-        li.nav-item
-          a.nav-link(href='base/breadcrumb.html')
-            span.nav-icon
-              span.nav-icon-bullet
-            |  Breadcrumb
-        li.nav-item
-          a.nav-link(href='base/cards.html')
-            span.nav-icon
-              span.nav-icon-bullet
-            |  Cards
-        li.nav-item
-          a.nav-link(href='base/list-group.html')
-            span.nav-icon
-              span.nav-icon-bullet
-            |  List group
-        li.nav-item
-          a.nav-link(href='base/navs-tabs.html')
-            span.nav-icon
-              span.nav-icon-bullet
-            |  Navs &amp; Tabs
-        li.nav-item
-          a.nav-link(href='base/pagination.html')
-            span.nav-icon
-              span.nav-icon-bullet
-            |  Pagination
-        li.nav-item
-          a.nav-link(href='base/placeholders.html')
-            span.nav-icon
-              span.nav-icon-bullet
-            |  Placeholders
-        li.nav-item
-          a.nav-link(href='base/popovers.html')
-            span.nav-icon
-              span.nav-icon-bullet
-            |  Popovers
-        li.nav-item
-          a.nav-link(href='base/progress.html')
-            span.nav-icon
-              span.nav-icon-bullet
-            |  Progress
-        li.nav-item
-          a.nav-link(href='base/spinners.html')
-            span.nav-icon
-              span.nav-icon-bullet
-            |  Spinners
-        li.nav-item
-            a.nav-link(href='base/tables.html')
-              span.nav-icon
-                span.nav-icon-bullet
-              |  Tables
-        li.nav-item
-          a.nav-link(href='base/tooltips.html')
-            span.nav-icon
-              span.nav-icon-bullet
-            |  Tooltips
-    //--li.nav-group
-      a.nav-link.nav-group-toggle(href='#')
-        svg.nav-icon
-          use(xlink:href="/vendors/@coreui/icons/free.svg#cil-cursor")
-        |  Buttons
-      ul.nav-group-items.compact
-        li.nav-item
-          a.nav-link(href='buttons/buttons.html')
-            span.nav-icon
-              span.nav-icon-bullet
-            |  Buttons
-        li.nav-item
-          a.nav-link(href='buttons/button-group.html')
-            span.nav-icon
-              span.nav-icon-bullet
-            |  Buttons Group
-        li.nav-item
-          a.nav-link(href='buttons/dropdowns.html')
-            span.nav-icon
-              span.nav-icon-bullet
-            |  Dropdowns
-    //--li.nav-group
-      a.nav-link.nav-group-toggle(href='#')
-        svg.nav-icon
-          use(xlink:href="/vendors/@coreui/icons/free.svg#cil-notes")
-        |  Forms
-      ul.nav-group-items.compact
-        li.nav-item
-          a.nav-link(href='forms/form-control.html')
-            span.nav-icon
-                span.nav-icon-bullet
-            |  Form Control
-        li.nav-item
-          a.nav-link(href='forms/select.html')
-            span.nav-icon
-                span.nav-icon-bullet
-            |  Select
-        li.nav-item
-          a.nav-link(href='forms/checks-radios.html')
-            span.nav-icon
-                span.nav-icon-bullet
-            |  Checks and radios
-        li.nav-item
-          a.nav-link(href='forms/range.html')
-            span.nav-icon
-              span.nav-icon-bullet
-            |  Range
-        li.nav-item
-          a.nav-link(href='forms/input-group.html')
-            span.nav-icon
-              span.nav-icon-bullet
-            |  Input group
-        li.nav-item
-          a.nav-link(href='forms/floating-labels.html')
-            span.nav-icon
-              span.nav-icon-bullet
-            |  Floating labels
-        li.nav-item
-          a.nav-link(href='forms/layout.html')
-            span.nav-icon
-              span.nav-icon-bullet
-            |  Layout
-        li.nav-item
-          a.nav-link(href='forms/validation.html')
-            span.nav-icon
-              span.nav-icon-bullet
-            |  Validation
-    //--li.nav-group
-      a.nav-link.nav-group-toggle(href='#')
-        svg.nav-icon
-          use(xlink:href="/vendors/@coreui/icons/free.svg#cil-star")
-        |  Icons
-      ul.nav-group-items.compact
-        li.nav-item
-          a.nav-link(href='icons/coreui-icons-free.html')
-            span.nav-icon
-              span.nav-icon-bullet
-            |  CoreUI Icons
-            span.badge.badge-sm.bg-success.ms-auto Free
-        li.nav-item
-          a.nav-link(href='icons/coreui-icons-brand.html')
-            span.nav-icon
-              span.nav-icon-bullet
-            |  CoreUI Icons - Brand
-        li.nav-item
-          a.nav-link(href='icons/coreui-icons-flag.html')
-            span.nav-icon
-              span.nav-icon-bullet
-            |  CoreUI Icons - Flag
-    //--li.nav-group
-      a.nav-link.nav-group-toggle(href='#')
-        svg.nav-icon
-          use(xlink:href="/vendors/@coreui/icons/free.svg#cil-bell")
-        |  Notifications
-      ul.nav-group-items.compact
-        li.nav-item
-          a.nav-link(href='notifications/alerts.html')
-            span.nav-icon
-              span.nav-icon-bullet
-            |  Alerts
-        li.nav-item
-          a.nav-link(href='notifications/badge.html')
-            span.nav-icon
-              span.nav-icon-bullet
-            |  Badge
-        li.nav-item
-          a.nav-link(href='notifications/modals.html')
-            span.nav-icon
-              span.nav-icon-bullet
-            |  Modals
-        li.nav-item
-          a.nav-link(href='notifications/toasts.html')
-            span.nav-icon
-              span.nav-icon-bullet
-            |  Toasts
-    //--li.nav-item
-      a.nav-link(href='widgets.html')
-        svg.nav-icon
-          use(xlink:href="/vendors/@coreui/icons/free.svg#cil-calculator")
-        |  Widgets
-        span.badge.badge-sm.bg-info.ms-auto NEW
-    //--li.nav-divider
-    //--li.nav-title
-      | Extras
-    //--li.nav-group
-      a.nav-link.nav-group-toggle(href='#')
-        svg.nav-icon
-          use(xlink:href="/vendors/@coreui/icons/free.svg#cil-star")
-        |  Pages
-      ul.nav-group-items.compact
-        li.nav-item
-          a.nav-link(href='login.html' target="_top")
-            svg.nav-icon
-              use(xlink:href="/vendors/@coreui/icons/free.svg#cil-account-logout")
-            |  Login
-        li.nav-item
-          a.nav-link(href='register.html' target="_top")
-            svg.nav-icon
-              use(xlink:href="/vendors/@coreui/icons/free.svg#cil-account-logout")
-            |  Register
-        li.nav-item
-          a.nav-link(href='404.html' target="_top")
-            svg.nav-icon
-              use(xlink:href="/vendors/@coreui/icons/free.svg#cil-bug")
-            |  Error 404
-        li.nav-item
-          a.nav-link(href='500.html' target="_top")
-            svg.nav-icon
-              use(xlink:href="/vendors/@coreui/icons/free.svg#cil-bug")
-            |  Error 500
   .sidebar-footer.border-top.d-none.d-md-flex      
     button.sidebar-toggler(type="button" data-coreui-toggle="unfoldable")

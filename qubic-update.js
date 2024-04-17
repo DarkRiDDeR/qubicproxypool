@@ -194,7 +194,7 @@ try {
             log.warning('DB end error: ' + err.message)
         }
     } else {
-        logger.warning(serverData, 'Error: not miners data')
+        logger.warning('Error: not miners data')
     } 
 } catch (err) {
     logger.error(err)

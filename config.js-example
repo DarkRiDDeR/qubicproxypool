@@ -1,3 +1,6 @@
+//import pino from 'pino'
+export const loggerLevel = 'debug'
+
 export const qubic = {
     login: '',
     password: '',
@@ -11,7 +14,6 @@ export const users = {
         ['admin', 'pass', 'none@example.com', 'KNIJXAGWQREUSFCFOHGRBAZNAQZAILFQBPFRVWPOECGPFNATPBDOCWUCZKMN']
     ],
 }
-
 export const epoch = { 
     currentEpoch: 103, // number
     timestamp: 1712145600000 // timestamp in milliseconds
@@ -21,7 +23,6 @@ export const server = {
     port: 3000,
     sessionSecretKey: 'qubicproxypool'
 }
-
 export const db = {
     host: '127.0.0.1',
     port: 3306,

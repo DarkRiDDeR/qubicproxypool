@@ -9,7 +9,7 @@ header.header.header-sticky.p-0.mb-4
         a.nav-link.active(href="/") Dashboard
       li.nav-item
         a.nav-link(href="/calc/") Calculate
-      li.nav-item
+      //li.nav-item
         a.nav-link(href="/epochs/") Epochs
     //--ul.header-nav.ms-auto
       li.nav-item
@@ -70,7 +70,7 @@ header.header.header-sticky.p-0.mb-4
             img.avatar-img(src="/assets/img/avatars/1.jpg" alt="user")
         .dropdown-menu.dropdown-menu-end.pt-0
           .dropdown-header.bg-body-tertiary.text-body-secondary.fw-semibold.rounded-top.mb-2 Account
-          a.dropdown-item(href="profile.html")
+          a.dropdown-item(href="/panel/profile/")
             svg.icon.me-2
               use(xlink:href="/vendors/@coreui/icons/free.svg#cil-user")
               |
@@ -86,7 +86,7 @@ header.header.header-sticky.p-0.mb-4
               |
             |  Payments
             span.badge.badge-sm.bg-secondary.ms-2 42
-          a.dropdown-item(href="#")
+          a.dropdown-item(href="/logout/")
             svg.icon.me-2
               use(xlink:href="/vendors/@coreui/icons/free.svg#cil-account-logout")
               |
