@@ -46,15 +46,27 @@ function checkAuth(req, res, next) {
     if (req.session.userId) next()
     else res.redirect('/login/')
 }
+function nocache(req, res, next) {
+    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate')
+    res.header('Expires', '-1')
+    res.header('Pragma', 'no-cache')
+    next()
+}
+
 
 app.get('/', function(req, res, next) {
     res.render('index.pug', { url: req.url })
     //next(new Error('Example error message'))
 })
 app.get('/login/', (req, res) => {
-    res.render('login.pug', { url: req.url })
+    if (req.session.userId) res.redirect('/panel/')
+    else res.render('login.pug', { url: req.url })
 })
-app.post('/login/', async (req, res) => {
+app.post('/login/', nocache, async (req, res) => {
+    if (req.session.userId) {
+        res.json({success: 0, message: "You are already authorized"})
+        return
+    }
     if(req.body.login && req.body.password){
         let dbc
         try {
@@ -79,9 +91,14 @@ app.post('/login/', async (req, res) => {
 })
 
 app.get('/register/', function(req, res){
-    res.render('register.pug')
+    if (req.session.userId) res.redirect('/panel/')
+    else res.render('register.pug')
 })
-app.post('/register/', async function(req, res){
+app.post('/register/', nocache, async function(req, res){
+    if (req.session.userId) {
+        res.json({success: 0, message: "You are already authorized"})
+        return
+    }
     if(req.body.login && req.body.email && req.body.password && req.body.password2 && req.body.wallet){
         let dbc
         try {
@@ -133,7 +150,7 @@ app.get('/panel/instruction/', checkAuth, function(req, res){
 })
 
 //api
-app.get('/api/receive/', checkAuth, async function(req, res){ // only current user
+app.get('/api/receive/', nocache, checkAuth, async function(req, res){ // only current user
     let json = []
     try {
         let data  = fs.readFileSync(__dirname + '/data/receive.json')
