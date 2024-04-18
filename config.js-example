@@ -24,7 +24,6 @@ export const confEpoch = {
     timestamp: 1712145600000 // timestamp in milliseconds
 }
 export const confServer = {
-    host: '127.0.0.1',
     port: 3000,
     sessionSecretKey: 'qubicproxypool'
 }

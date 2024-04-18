@@ -173,6 +173,6 @@ app.use(function(error, req, res, next) {
     logger.error({url: req.url}, error.message)
     res.status(500).render('500.pug');
 })
-app.listen(confServer.port, confServer.host, function () {
-    console.log(`Server listens http://${confServer.host}:${confServer.port}`);
+app.listen(confServer.port, function () {
+    console.log(`Server listens http://127.0.0.1:${confServer.port}`);
 })
