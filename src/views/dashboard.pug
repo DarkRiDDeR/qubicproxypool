@@ -71,7 +71,7 @@ block view
                   svg.icon.icon-xxl
                     use(xlink:href="/vendors/@coreui/icons/free.svg#cil-dollar")
                     |
-                .fs-4.fw-semibold 0.00000739$
+                .fs-4.fw-semibold 0.000005$
                 .small.text-white.text-opacity-75.text-uppercase.fw-semibold.text-truncate Qubic price
                 .progress.progress-white.progress-thin.mt-3
                   .progress-bar(role='progressbar', style='width: 25%', aria-valuenow='25', aria-valuemin='0', aria-valuemax='100')
@@ -133,7 +133,7 @@ block view
               b.text-success #{' '}601.97$
 
                 .card.mb-4
-          .table-responsive
+          .table-responsive(id="table-panel-workers")
               table.table.border.mb-0
                 thead.fw-semibold.text-nowrap
                   tr.align-middle
@@ -144,7 +144,7 @@ block view
                     th.bg-body-secondary Last active
                     th.bg-body-secondary Is active
                 tbody
-                  tr.align-middle
+                //--  tr.align-middle
                     td
                       | User1.w1
                     td

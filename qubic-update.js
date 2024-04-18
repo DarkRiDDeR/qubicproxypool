@@ -1,9 +1,14 @@
-
 import pino from 'pino'
+import fs from 'node:fs'
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
 import { confLogger, confQubic } from "./config.js"
 import { dbConnect } from "./functions.js"
 
 process.env.TZ = "UTC"
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+
 
 const logger = pino(pino.destination({
     //dest: './logs/qubic-updater.log',
@@ -81,6 +86,11 @@ try {
 
 
     if (serverData) {
+        // savedata
+        fs.writeFile(__dirname + '/data/receive.json', JSON.stringify(serverData), err => { 
+            if(err) throw err
+        })
+
         try {
             dbc = await dbConnect()
         } catch(err) { 
@@ -154,7 +164,7 @@ try {
             return !dbWorkers.has(dbUsers.get(item[0]) + '.' + item[1])
         })
         //newWorkers.push(['jhon', '2680dual'])
-        console.log(newWorkers)
+        //console.log(newWorkers)
         let firstItem
         if (newWorkers && (firstItem = newWorkers.shift())) {
             let sql = `INSERT INTO workers(user_id, name) VALUES ( ${dbUsers.get(firstItem[0])}, ${dbc.escape(firstItem[1])} )`
@@ -173,6 +183,7 @@ try {
             }, dbWorkers)
         }
 
+        console.log(stats)
         if (stats) {
             let sql = ''
             stats.forEach(item => {
@@ -194,10 +205,12 @@ try {
             log.warning('DB end error: ' + err.message)
         }
     } else {
-        logger.warning('Error: not miners data')
+        logger.warning('Error: not miners data from server')
     } 
 } catch (err) {
     logger.error(err)
-    dbc.end()
+    if (dbc) {
+        dbc.end()
+    }
 }
 

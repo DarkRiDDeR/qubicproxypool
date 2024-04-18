@@ -1,5 +1,6 @@
 import pino from 'pino'
-import { fileURLToPath } from 'url';
+import fs from 'node:fs'
+import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 import express from 'express'
 import session from 'express-session'
@@ -10,6 +11,7 @@ import { confLogger, confQubic, confServer } from "./config.js"
 import { dbConnect, dbVerifyUser } from "./functions.js"
 
 
+process.env.TZ = "UTC"
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 const logger = pino(pino.destination({
@@ -47,17 +49,12 @@ function checkAuth(req, res, next) {
 
 app.get('/', function(req, res, next) {
     res.render('index.pug', { url: req.url })
-    /*err = { mgs: 'Example error message', error: 'Some error'}
-    if(err) next(err)
-    if(!err){
-        res.render('index', { title: 'Express' })
-    }*/
+    //next(new Error('Example error message'))
 })
 app.get('/login/', (req, res) => {
     res.render('login.pug', { url: req.url })
 })
 app.post('/login/', async (req, res) => {
-    console.log([req.body.login, req.body.password])
     if(req.body.login && req.body.password){
         let dbc
         try {
@@ -75,16 +72,32 @@ app.post('/login/', async (req, res) => {
             res.json({success: 0, message: "Server is temporarily unavailable"})
             return
         } finally {
-            if (dbc) {
-                dbc.end()
-            }
+            if (dbc) dbc.end()
         }
     }
     res.json({success: 0, message: "Invalid login or password!"})
 })
 
 app.get('/register/', function(req, res){
-    res.render('register.pug', { url: req.url })
+    res.render('register.pug')
+})
+app.post('/register/', async function(req, res){
+    if(req.body.login && req.body.email && req.body.password && req.body.password2 && req.body.wallet){
+        let dbc
+        try {
+            dbc = await dbConnect()
+            
+            
+
+        } catch(err) {
+            logger.error({url: req.url}, err.message)
+            res.json({success: 0, message: "Server is temporarily unavailable"})
+            return
+        } finally {
+            if (dbc) dbc.end()
+        }
+    }
+    res.json({success: 0, message: "Еhere are empty fields!"})
 })
 app.get('/logout/', function(req, res){
     req.session.destroy()
@@ -119,6 +132,24 @@ app.get('/panel/instruction/', checkAuth, function(req, res){
     res.render('instruction.pug')
 })
 
+//api
+app.get('/api/receive/', checkAuth, async function(req, res){ // only current user
+    let json = []
+    try {
+        let data  = fs.readFileSync(__dirname + '/data/receive.json')
+        data = JSON.parse(data)
+        for(const item of data) {
+            const regex = new RegExp('^' + req.session.user + '(\.|___)', 'i')
+            if (item.alias.match(regex)) {
+                json.push(item)
+            }
+        }
+    } catch(err) {
+        logger.error(err)
+    }
+    res.json(json)
+})
+
 
 //Handling 404
 app.use((req, res, next) => {
@@ -136,8 +167,7 @@ app.use((req, res, next) => {
 app.use(function(error, req, res, next) {
     logger.error({url: req.url}, error.message)
     res.status(500).render('500.pug');
-});
-
+})
 app.listen(confServer.port, confServer.host, function () {
     console.log(`Server listens http://${confServer.host}:${confServer.port}`);
 })
