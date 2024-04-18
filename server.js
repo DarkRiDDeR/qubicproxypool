@@ -7,7 +7,7 @@ import session from 'express-session'
 import slashes from 'connect-slashes'
 import bodyParser from 'body-parser'
 import multer from 'multer'
-import { confLogger, confQubic, confServer } from "./config.js"
+import { confLogger, confQubic, confServer, confUsers } from "./config.js"
 import { dbConnect, dbVerifyUser } from "./functions.js"
 
 
@@ -15,7 +15,7 @@ process.env.TZ = "UTC"
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 const logger = pino(pino.destination({
-    //dest: './logs/serve.log',
+    dest: './logs/serve.log',
     level: confLogger.level,
 }))
 const app = express()
@@ -41,8 +41,8 @@ app.use(express.static(__dirname + '/dist'))
 app.use(slashes())
 
 function checkAuth(req, res, next) {
-    req.session.userId = 8
-    req.session.user = 'darkwi'
+    //req.session.userId = 2
+    //req.session.user = 'admin'
     if (req.session.userId) next()
     else res.redirect('/login/')
 }
@@ -138,10 +138,15 @@ app.get('/api/receive/', checkAuth, async function(req, res){ // only current us
     try {
         let data  = fs.readFileSync(__dirname + '/data/receive.json')
         data = JSON.parse(data)
-        for(const item of data) {
-            const regex = new RegExp('^' + req.session.user + '(\.|___)', 'i')
-            if (item.alias.match(regex)) {
-                json.push(item)
+        //console.log([confUsers.admins, req.session.userId])
+        if (confUsers.admins.indexOf(req.session.userId) !== -1) { //admin. Print all info
+            json = data
+        } else {
+            for(const item of data) {
+                const regex = new RegExp('^' + req.session.user + '(\.|___)', 'i')
+                if (item.alias.match(regex)) {
+                    json.push(item)
+                }
             }
         }
     } catch(err) {

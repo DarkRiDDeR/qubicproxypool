@@ -54,5 +54,5 @@ export async function dbVerifyUser(dbc, login, password) {
         {sql: 'SELECT id FROM users WHERE login = ? AND password = ?', rowsAsArray: true},
         [login, getPasswordHash(password)]
     )
-    return rows.length > 0 ? rows[0] : false
+    return rows.length > 0 ? rows[0][0] : false
 }

@@ -11,7 +11,7 @@ const __dirname = dirname(__filename)
 
 
 const logger = pino(pino.destination({
-    //dest: './logs/qubic-updater.log',
+    dest: './logs/qubic-updater.log',
     level: confLogger.level,
 }))
 
@@ -183,7 +183,7 @@ try {
             }, dbWorkers)
         }
 
-        console.log(stats)
+        //console.log(stats)
         if (stats) {
             let sql = ''
             stats.forEach(item => {
