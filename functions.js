@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto'
 import mysql from 'mysql2/promise'
+import { CoinGeckoClient } from 'coingecko-api-v3'
 import { confDb, confEpoch} from './config.js'
 
 export function getPasswordHash(password) {
@@ -50,4 +51,15 @@ export async function dbVerifyUser(dbc, login, password) {
         [login, getPasswordHash(password)]
     )
     return rows.length > 0 ? rows[0][0] : false
+}
+
+export async function getPrice() {
+    const client = new CoinGeckoClient({
+        timeout: 5000
+    })
+    const res = await client.simplePrice({ids:'qubic-network', vs_currencies:'usd'})
+    if (res['qubic-network']) {
+        return res['qubic-network']['usd']
+    }
+    return null
 }

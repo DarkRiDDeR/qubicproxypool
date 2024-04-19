@@ -3,7 +3,7 @@ import { argv } from 'node:process'
 import { stat } from 'node:fs'
 import { match } from 'node:assert'
 import { confLogger, confUsers } from "./config.js"
-import { dbConnect, dbCreateUser, getCurrentEpoch, getTimestampOfLastWednesday, getPasswordHash } from "./functions.js"
+import { dbConnect, dbCreateUser, getCurrentEpoch, getTimestampOfLastWednesday, getPasswordHash, getPrice } from "./functions.js"
 
 /*Launching the Node.js process as:
 node process-args.js one two=three four 
@@ -69,6 +69,8 @@ if (argv[2] == 'install') {
     console.log(`Epoch=${epoch}; Progress: ${progress}%; Start date: ` + startDate.toISOString())
 } else if (argv[2] == 'calculate') {
 
+} else if (argv[2] == 'price') {
+    console.log(await getPrice())
 } else {
     console.error('Error: command not find')
 }
