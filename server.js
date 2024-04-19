@@ -43,7 +43,7 @@ app.use(compression({ filter: shouldCompress }))
 // Once every 4 hours
 function touchSession(req, res, next) {
     if (req.session.time) {
-        const ts = Date.now()
+        const ts = Date.UTC()
         if ((ts - req.session.time) > 14400000) {
             req.session.time = ts
         }
@@ -106,7 +106,7 @@ app.post('/login/', nocache, async (req, res) => {
             if(userId){
                 req.session.user = user
                 req.session.userId = userId
-                req.session.time = Date.now()
+                req.session.time = Date.UTC()
                 res.json({success: '/panel/', message: ""})
                 return
             }
