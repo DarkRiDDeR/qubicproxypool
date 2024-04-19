@@ -222,11 +222,17 @@ try {
             fs.writeFile(__dirname + '/data/price.txt', price.toString(), err => { 
                 if(err) throw err
             })
-            if (fs.existsSync(__dirname + '/data/price.txt')) {
-                price = parseFloat(fs.readFileSync(__dirname + '/data/price.txt', 'utf-8'))
-            }
         } catch(err) {
             logger.warn(err, 'price processing error')
+        }
+        if (!price) {
+            try {
+                if (fs.existsSync(__dirname + '/data/price.txt')) {
+                    price = parseFloat(fs.readFileSync(__dirname + '/data/price.txt', 'utf-8'))
+                }
+            } catch(err) {
+                logger.warn(err, 'price processing 2 error')
+            }
         }
         
 
