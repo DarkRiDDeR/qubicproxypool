@@ -16,7 +16,7 @@ block view
                   svg.icon
                     use(xlink:href="/vendors/@coreui/icons/free.svg#cil-user")
                     |
-                input.form-control(name="login" type='text', placeholder='Username [0-9A-Za-z, min 5]' pattern="^[\dA-Za-z]+$" minlength="5" required)
+                input.form-control(name="login" type='text', placeholder='Username [0-9A-Za-z, min 5]' pattern="^[0-9A-Za-z]+$" minlength="5" required)
                 .invalid-feedback
                   | The minimum length is 5 and characters are allowed 0-9A-Za-z
               .input-group.mb-3
