@@ -14017,7 +14017,8 @@ textarea.form-control-lg {
 }
 
 .exchanges-icons img {
-  max-width: 400px;
+  width: 400px;
+  max-width: 100%;
   margin: 1em 0 2em;
 }
 
