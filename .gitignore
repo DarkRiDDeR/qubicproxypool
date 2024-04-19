@@ -2,4 +2,5 @@
 /logs/*
 *.log
 /config.js
-/data/
+/data/*.txt
+/data/*.json
