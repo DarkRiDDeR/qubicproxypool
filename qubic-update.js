@@ -255,7 +255,7 @@ try {
             const poolReward = 0.85
             const incomePerOneIts = poolReward * price * 1000000000000 / netHashrate / 7 / 1.06
             const curSolPrice = 1479289940 * poolReward * progress * price / (netAvgScores * 1.06)
-            fs.writeFile(__dirname + '/data/mainifno.json', JSON.stringify({
+            fs.writeFile(__dirname + '/data/maininfo.json', JSON.stringify({
                     updateTime: now,
                     price,
                     epoch: currentEpochNumber,
