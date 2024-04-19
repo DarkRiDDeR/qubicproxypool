@@ -248,7 +248,7 @@ try {
         })
         serverData = await response.json()
         if (serverData) {
-            const now = Date.UTC()
+            const now = new Date().getTime()
             const millisecondsInWweek = 604800000
             const currentEpochNumber = serverData['scoreStatistics'][0]['epoch']
             const epoch103Begin = confEpoch.timestamp

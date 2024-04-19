@@ -111,7 +111,7 @@ if (elMainInfo) {
         el = elMainInfo.querySelector('.info-sol-price .fs-4.fw-semibold span')
         if (el) el.textContent = Math.round(res.curSolPrice * 100) / 100
         el = elMainInfo.querySelector('.info-age .fs-4.fw-semibold span')
-        if (el) el.textContent = Math.floor((res.updateTime - Date.now()) / 1000)
+        if (el) el.textContent = Math.floor((res.updateTime - new Date().getTime()) / 1000)
       }
     }
     tick()
