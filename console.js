@@ -41,7 +41,7 @@ if (argv[2] == 'install') {
     }
 } else if (argv[2] == 'user-add') {
     if (argv.length != 7) {
-        console.error('Error: add user command "adduser <login> <email> <password> <wallet>"')
+        console.error('Error: add user command "add-user <login> <email> <password> <wallet>"')
     } else {
         console.log(await dbCreateUser(dbc, argv[3].toLowerCase(), argv[4].toLowerCase(), argv[5], argv[6]))
     }

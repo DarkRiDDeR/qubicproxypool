@@ -10,7 +10,7 @@ import compression from 'compression'
 import bodyParser from 'body-parser'
 import multer from 'multer'
 import { confLogger, confQubic, confServer, confUsers } from "./config.js"
-import { dbConnect, dbVerifyUser } from "./functions.js"
+import { dbConnect, dbCreateUser, dbVerifyUser } from "./functions.js"
 
 
 process.env.TZ = "UTC"
@@ -133,12 +133,48 @@ app.post('/register/', nocache, async function(req, res){
     if(req.body.login && req.body.email && req.body.password && req.body.password2 && req.body.wallet){
         let dbc
         try {
+            if (req.body.login.length < 5 && !req.body.login.match(/^[a-zA-Z\d]+$/)) {
+                res.json({success: 0, message: "The minimum length is 5 and characters are allowed 0-9A-Za-z", fieldsError: ['login']})
+                return
+            }
+            if (req.body.login.password < 8) {
+                res.json({success: 0, message: "The minimum length is 8", fieldsError: ['password']})
+                return
+            }
+            if (req.body.password !== req.body.password2) {
+                res.json({success: 0, message: "Repeat passwords must be the same", fieldsError: ['password2']})
+                return
+            }
+            if (req.body.wallet.length != 60) {
+                res.json({success: 0, message: "Wallet length must be 60", fieldsError: ['wallet']})
+                return
+            }
+            const login = req.body.login.toLowerCase()
             dbc = await dbConnect()
-            
-            
-
+            const [rowsUser] = await dbc.query({sql: 'SELECT id FROM users WHERE login = ?', rowsAsArray: true}, [login])
+            if (rowsUser.length) {
+                res.json({success: 0, message: "There is already a user with this login", fieldsError: ['login']})
+                return
+            }
+            const [rowsEmails] = await dbc.query({sql: 'SELECT id FROM users WHERE email = ?', rowsAsArray: true}, [req.body.email])
+            if (rowsEmails.length) {
+                res.json({success: 0, message: "There is already a user with this email", fieldsError: ['email']})
+                return
+            }
+            const [newuser] =  await dbCreateUser(dbc, login, req.body.email, req.body.password, req.body.wallet)
+            if (newuser && newuser.insertId) {
+                req.session.user = login
+                req.session.userId = newuser.insertId
+                req.session.time = new Date().getTime()
+                res.json({success: '/panel/', message: ""})
+                return
+            } else {
+                logger.error({newuser}, 'Failed to create user. Server has a problem')
+                res.json({success: 0, message: "Failed to create user. Server has a problem"})
+                return
+            }
         } catch(err) {
-            logger.error({url: req.url}, err.message)
+            logger.error({err, url: req.url})
             res.json({success: 0, message: "Server is temporarily unavailable"})
             return
         } finally {

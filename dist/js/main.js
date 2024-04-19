@@ -30,7 +30,6 @@ for (const form of Array.prototype.slice.call(elFormsAuth)) {
     const form = e.currentTarget
     let msgError = null
     try {
-      console.log([form.action, form.method])
       const response = await fetch(form.action, {
         method: form.method,
         body: new FormData(form)
@@ -56,6 +55,56 @@ for (const form of Array.prototype.slice.call(elFormsAuth)) {
       }
       form.classList.add('was-validated')
     }
+  })(e))
+}
+
+const elFormsReg = document.querySelectorAll('.form-reg')
+for (const form of Array.prototype.slice.call(elFormsReg)) {
+  for(const input of form.querySelectorAll('input')) {
+    input.oninput = function(event) {
+      event.target.setCustomValidity('')
+    }
+  }
+
+  form.addEventListener('submit', e => (async e => {
+    e.preventDefault()
+    const form = e.currentTarget
+    form.classList.add('was-validated')
+    try {
+      const response = await fetch(form.action, {
+        method: form.method,
+        body: new FormData(form)
+      })
+      const result = await response.json()
+      if (result.success) {
+        window.location.href = result.success
+      } else if (result.fieldsError) {
+        for(const input of form.querySelectorAll('input')) {
+          if (result.fieldsError.indexOf(input.name) !== -1) {
+            input.parentNode.querySelector('.invalid-feedback').textContent = result.message
+            input.setCustomValidity(result.message)
+          }
+        }
+      } else {
+        for(const input of form.querySelectorAll('input')) {
+          input.classList.remove('is-invalid')
+        }
+      }
+    } catch (error) {
+      msgError = 'Error processing data from the server'
+    }
+    /*if (msgError) {
+      form.querySelector('.invalid-feedback').textContent = msgError
+      for (const input of form.querySelectorAll('input')) {
+        input.classList.add('is-invalid')
+      }
+      form.classList.remove('was-validated')
+    } else {
+      for (const input of form.querySelectorAll('input')) {
+        input.classList.remove('is-invalid')
+      }
+      form.classList.add('was-validated')
+    }*/
   })(e))
 }
 

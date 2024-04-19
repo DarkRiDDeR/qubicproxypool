@@ -1,4 +1,6 @@
 extends ../_layout/pages.pug
+block scripts
+  script(src='/js/main.js')
 
 block view
   .container
@@ -8,37 +10,46 @@ block view
           .card-body.p-4
             h1 Register
             p.text-body-secondary Create your account
-            form.needs-validation.form-reg(method="get" action="api/registration.json")
+            form.needs-validation.form-reg(method="post" action="/register/")
               .input-group.mb-3
                 span.input-group-text
                   svg.icon
                     use(xlink:href="/vendors/@coreui/icons/free.svg#cil-user")
                     |
-                    |
                 input.form-control(name="login" type='text', placeholder='Username [0-9A-Za-z, min 5]' pattern="^[\dA-Za-z]+$" minlength="5" required)
+                .invalid-feedback
+                  | The minimum length is 5 and characters are allowed 0-9A-Za-z
               .input-group.mb-3
                 span.input-group-text
                   svg.icon
                     use(xlink:href="/vendors/@coreui/icons/free.svg#cil-envelope-open")
                     |
                 input.form-control(name="email" type='email', placeholder='Email' required)
+                .invalid-feedback
+                  | Enter the correct email format
               .input-group.mb-3
                 span.input-group-text
                   svg.icon
                     use(xlink:href="/vendors/@coreui/icons/free.svg#cil-lock-locked")
                     |
                 input.form-control(name="password" type='password', placeholder='Password [min 8]' minlength="8" required)
+                .invalid-feedback
+                  | The minimum length is 8
               .input-group.mb-4
                 span.input-group-text
                   svg.icon
                     use(xlink:href="/vendors/@coreui/icons/free.svg#cil-lock-locked")
                     |
                 input.form-control(name="password2" type='password', placeholder='Repeat password' required)
+                .invalid-feedback
+                  | Passwords must be the same
               .input-group.mb-4
                 span.input-group-text
                   svg.icon
                     use(xlink:href="/vendors/@coreui/icons/free.svg#cil-wallet")
                     |
                 input.form-control(name="wallet" type='wallet', placeholder='Qubic wallet [length 60, A-Z]' minlength="60" maxlength="60" pattern="^[A-Z]+$" required)
+                .invalid-feedback
+                  | Wallet length must be 60
               button.btn.btn-block.btn-success(type='submit') Create Account
 
