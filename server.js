@@ -203,6 +203,11 @@ app.get('/api/receive/', nocache, checkAuth, async function(req, res){ // only c
     }
     res.json(json)
 })
+app.get('/api/maininfo/', nocache, (req, res) => {
+    res.setHeader('x-no-compression', '1')
+    res.header("Content-Type",'application/json')
+    res.sendFile(__dirname + '/data/maininfo.json')
+})
 
 
 //Handling 404

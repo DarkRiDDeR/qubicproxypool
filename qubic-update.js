@@ -2,8 +2,8 @@ import pino from 'pino'
 import fs from 'node:fs'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
-import { confLogger, confQubic } from "./config.js"
-import { dbConnect } from "./functions.js"
+import { confEpoch, confLogger, confQubic } from "./config.js"
+import { dbConnect, getPrice } from "./functions.js"
 
 process.env.TZ = "UTC"
 const __filename = fileURLToPath(import.meta.url)
@@ -98,6 +98,9 @@ try {
             process.exit(1)
         }
 
+        let totalHashrate = 0
+        let totalSolutions = 0
+        let totalActiveWorkers = 0
         const dbUsers = new Map()  // [login, id]
         let dbWorkers = new Map()// [user_id.name, id]
         let rows
@@ -187,6 +190,11 @@ try {
         if (stats) {
             let sql = ''
             stats.forEach(item => {
+                totalSolutions += item.sol
+                totalHashrate += item.its
+                if (item.isActive) {
+                    ++totalActiveWorkers
+                }
                 const userId = dbUsers.get(item.user)
                 const workerId = dbWorkers.get(userId + '.' + item.worker)
                 if (sql) {
@@ -201,12 +209,95 @@ try {
     
         try {
             dbc.end()
+            dbc = null
         } catch(err) { 
             log.warning('DB end error: ' + err.message)
         }
+
+
+        // qubic price
+        let price = 0
+        try {
+            price = await getPrice(5000)
+            fs.writeFile(__dirname + '/data/price.txt', price.toString(), err => { 
+                if(err) throw err
+            })
+            if (fs.existsSync(__dirname + '/data/price.txt')) {
+                price = parseFloat(fs.readFileSync(__dirname + '/data/price.txt', 'utf-8'))
+            }
+        } catch(err) {
+            logger.warn(err, 'price processing error')
+        }
+        
+
+        //Fetches and returns network statistics
+        response = await fetch('https://api.qubic.li/Score/Get', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+                'User-Agent': userAgent
+            },
+            timeout: 10000,
+        })
+        serverData = await response.json()
+        if (serverData) {
+            const now = Date.now()
+            const millisecondsInWweek = 604800000
+            const currentEpochNumber = serverData['scoreStatistics'][0]['epoch']
+            const epoch103Begin = confEpoch.timestamp
+            const epochBegin = epoch103Begin + millisecondsInWweek * (currentEpochNumber - confEpoch.number)
+            const epochEnd = epochBegin + millisecondsInWweek - 1000
+            const progress = (now - epochBegin) / 604800000
+            const netHashrate = serverData['estimatedIts']
+            const netAvgScores = serverData['averageScore']
+            const netSolsPerHour = serverData['solutionsPerHour']
+            const poolReward = 0.85
+            const incomePerOneIts = poolReward * price * 1000000000000 / netHashrate / 7 / 1.06
+            const curSolPrice = 1479289940 * poolReward * progress * price / (netAvgScores * 1.06)
+            fs.writeFile(__dirname + '/data/mainifno.json', JSON.stringify({
+                    updateTime: now,
+                    price,
+                    epoch: currentEpochNumber,
+                    epochBegin,
+                    epochEnd,
+                    progress,
+                    netHashrate,
+                    netAvgScores,
+                    netSolsPerHour,
+                    incomePerOneIts,
+                    curSolPrice,
+                    total: {
+                        solutions: totalSolutions,
+                        hashrate: totalHashrate,
+                        activeWorkers: totalActiveWorkers
+                    }
+                }),
+                err => { 
+                    if(err) throw err
+                }
+            )
+
+            /**
+                print(f'Current epoch: {make_light_blue(f"{currentEpochNumber}")}')
+                print(f'Epoch start UTC: {make_light_yellow(f"{epochBegin}")}')
+                print(f'Epoch end UTC: {make_light_yellow(f"{epochEnd}")}')
+                print(f'Epoch progress: {make_light_yellow(f"{100 * progress:.1f}%")}\n')
+                print('Network Info')
+                print(f'Estimated network hashrate: {make_light_blue(f"{netHashrate:,} it/s")}')
+                print(f'Average score: {make_light_yellow(f"{netAvgScores:.1f}")}')
+                print(f'Scores per hour: {make_light_yellow(f"{netSolsPerHour:.1f}")}\n')
+                print('Income Estimations')
+                print(f'Qubic price: {make_light_yellow(f"{qubic_price:.8f}$")}\n')
+                print(f'Estimated income per 1 it/s per day: {make_light_green(f"{incomePerOneIts:.4f}$")}')
+                print(f'Estimated income per day: {make_light_green(f"{myHashrate * incomePerOneIts:.2f}$")}')
+                print(f'Estimated income per 1 sol: {make_light_green(f"{curSolPrice:.2f}$")}')
+                print(f'Estimated sols per day: {make_light_green(f"{24 * myHashrate * netSolsPerHour / netnetHashrate_hashrate:.1f}")}\n')
+             */
+        }
     } else {
         logger.warning('Error: not miners data from server')
-    } 
+    }
 } catch (err) {
     logger.error(err)
     if (dbc) {

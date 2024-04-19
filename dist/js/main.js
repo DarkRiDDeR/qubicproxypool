@@ -89,4 +89,35 @@ if (elPanelWorkers) {
     msgError = 'Error processing data from the server'
   }
 }
+
+
+const elMainInfo = document.querySelector('#main-info')
+if (elMainInfo) {
+  try {
+    const tick = async () => {
+      let res = await fetch('/api/maininfo/')
+      res = await res.json()
+      if (res) {
+        let el = elMainInfo.querySelector('.info-active-workers .fs-4.fw-semibold span')
+        if (el) el.textContent = res.total.activeWorkers
+        el = elMainInfo.querySelector('.info-hashrate .fs-4.fw-semibold span')
+        if (el) el.textContent = res.total.hashrate
+        el = elMainInfo.querySelector('.info-solutions .fs-4.fw-semibold span')
+        if (el) el.textContent = res.total.solutions
+        el = elMainInfo.querySelector('.info-price .fs-4.fw-semibold span')
+        if (el) el.textContent = res.price
+        el = elMainInfo.querySelector('.info-network .fs-4.fw-semibold span')
+        if (el) el.textContent = res.netHashrate
+        el = elMainInfo.querySelector('.info-sol-price .fs-4.fw-semibold span')
+        if (el) el.textContent = Math.round(res.curSolPrice * 100) / 100
+        el = elMainInfo.querySelector('.info-age .fs-4.fw-semibold span')
+        if (el) el.textContent = Math.floor((res.updateTime - Date.now()) / 1000)
+      }
+    }
+    tick()
+    setInterval(tick, 60000)
+  } catch (error) {
+    msgError = 'Error processing data from the server'
+  }
+}
 //# sourceMappingURL=main.js.map

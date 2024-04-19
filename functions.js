@@ -53,10 +53,8 @@ export async function dbVerifyUser(dbc, login, password) {
     return rows.length > 0 ? rows[0][0] : false
 }
 
-export async function getPrice() {
-    const client = new CoinGeckoClient({
-        timeout: 5000
-    })
+export async function getPrice(timeout = 10000) {
+    const client = new CoinGeckoClient({timeout})
     const res = await client.simplePrice({ids:'qubic-network', vs_currencies:'usd'})
     if (res['qubic-network']) {
         return res['qubic-network']['usd']
