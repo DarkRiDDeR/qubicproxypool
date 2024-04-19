@@ -191,8 +191,8 @@ try {
             let sql = ''
             stats.forEach(item => {
                 totalSolutions += item.sol
-                totalHashrate += item.its
                 if (item.isActive) {
+                    totalHashrate += item.its
                     ++totalActiveWorkers
                 }
                 const userId = dbUsers.get(item.user)
