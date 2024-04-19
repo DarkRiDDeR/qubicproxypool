@@ -32,12 +32,7 @@ export function getCurrentEpoch() {
  * @returns true or error message 
  */
 export function dbConnect(){
-    return mysql.createConnection({
-        host: confDb.host,
-        user: confDb.user,
-        database: confDb.name,
-        password: confDb.password
-    })
+    return mysql.createPool(confDb)
 }
 
 

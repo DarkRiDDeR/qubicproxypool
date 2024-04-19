@@ -31,7 +31,7 @@ export const confServer = {
 export const confDb = {
     host: '127.0.0.1',
     port: 3306,
-    name: 'qubic_proxy_pool',
+    database: 'qubic_proxy_pool',
     user: 'qubic_user',
     password: 'qubic_pass',
 }

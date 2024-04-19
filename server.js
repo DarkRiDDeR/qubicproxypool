@@ -4,7 +4,9 @@ import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 import express from 'express'
 import session from 'express-session'
+import MySQLSession from 'express-mysql-session'
 import slashes from 'connect-slashes'
+import compression from 'compression'
 import bodyParser from 'body-parser'
 import multer from 'multer'
 import { confLogger, confQubic, confServer, confUsers } from "./config.js"
@@ -28,23 +30,49 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(upload.array())
 //app.use(cookie)
-const sessionConf = {
+
+function shouldCompress (req, res) {
+    if (req.headers['x-no-compression']) {
+      // don't compress responses with this request header
+      return false
+    }
+    return compression.filter(req, res)
+  }
+app.use(compression({ filter: shouldCompress }))
+
+// Once every 4 hours
+function touchSession(req, res, next) {
+    if (req.session.time) {
+        const ts = Date.now()
+        if ((ts - req.session.time) > 14400000) {
+            req.session.time = ts
+        }
+    }
+    //next()
+}
+const dbcSession = dbConnect()
+const sessionStore = new (MySQLSession(session))({}, dbcSession)
+app.use(session({
+	store: sessionStore,
     secret: confServer.sessionSecretKey,
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
     cookie: {
         expires: 86400000 // Session expires after 1 day
     }
-}
-app.use(session(sessionConf))
+}))
 app.use(express.static(__dirname + '/dist'))
 app.use(slashes())
 
+
 function checkAuth(req, res, next) {
-    //req.session.userId = 2
-    //req.session.user = 'admin'
-    if (req.session.userId) next()
-    else res.redirect('/login/')
+    if (req.session.userId) {
+        touchSession(req, res, next)
+        next()
+    }
+    else {
+        res.redirect('/login/')
+    }
 }
 function nocache(req, res, next) {
     res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate')
@@ -52,6 +80,8 @@ function nocache(req, res, next) {
     res.header('Pragma', 'no-cache')
     next()
 }
+
+
 
 
 app.get('/', function(req, res, next) {
@@ -76,6 +106,7 @@ app.post('/login/', nocache, async (req, res) => {
             if(userId){
                 req.session.user = user
                 req.session.userId = userId
+                req.session.time = Date.now()
                 res.json({success: '/panel/', message: ""})
                 return
             }
@@ -151,6 +182,7 @@ app.get('/panel/instruction/', checkAuth, function(req, res){
 
 //api
 app.get('/api/receive/', nocache, checkAuth, async function(req, res){ // only current user
+    res.setHeader('x-no-compression', '1')
     let json = []
     try {
         let data  = fs.readFileSync(__dirname + '/data/receive.json')
