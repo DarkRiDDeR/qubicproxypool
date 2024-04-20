@@ -244,7 +244,9 @@ try {
         fs.writeFile(__dirname + '/data/miners.json', JSON.stringify(miners), err => { 
             if(err) logger.error({err})
         })
-        miners.length = 10
+        if (miners.length > 10) {
+            miners.length = 10
+        }
         miners.map(item => {
             item.countInactive = null
             item.isEmpty = null
