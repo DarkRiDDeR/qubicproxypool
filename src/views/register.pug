@@ -10,7 +10,17 @@ block view
           .card-body.p-4
             h1 Register
             p.text-body-secondary Create your account
+            p.text-body-secondary
+              b Registration is currently limited. Need an invitation code
             form.needs-validation.form-reg(method="post" action="/register/")
+              .input-group.mb-3
+                span.input-group-text
+                  svg.icon
+                    use(xlink:href="/vendors/@coreui/icons/free.svg#cil-shield-alt")
+                    |
+                input.form-control(name="code" type='text',  placeholder='Invitation code', required)
+                .invalid-feedback
+                  | Invalid invitation code
               .input-group.mb-3
                 span.input-group-text
                   svg.icon

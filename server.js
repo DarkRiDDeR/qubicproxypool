@@ -130,9 +130,13 @@ app.post('/register/', nocache, async function(req, res){
         res.json({success: 0, message: "You are already authorized"})
         return
     }
-    if(req.body.login && req.body.email && req.body.password && req.body.password2 && req.body.wallet){
+    if(req.body.login && req.body.email && req.body.password && req.body.password2 && req.body.wallet && req.body.code){
         let dbc
         try {
+            if (req.body.code != '558744') {
+                res.json({success: 0, message: "Invalid invitation code", fieldsError: ['code']})
+                return
+            }
             if (req.body.login.length < 5 && !req.body.login.match(/^[a-zA-Z\d]+$/)) {
                 res.json({success: 0, message: "The minimum length is 5 and characters are allowed 0-9A-Za-z", fieldsError: ['login']})
                 return

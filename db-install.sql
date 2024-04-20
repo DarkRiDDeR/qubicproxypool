@@ -1,3 +1,9 @@
+/*
+CREATE DATABASE qubic_proxy_pool;
+CREATE USER 'qubic_user'@'localhost' IDENTIFIED BY 'qubic_pass';
+GRANT ALL PRIVILEGES ON qubic_proxy_pool.* TO 'qubic_user'@'localhost';
+
+*/
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
