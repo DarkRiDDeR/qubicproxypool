@@ -149,7 +149,9 @@ try {
 
             if (stats.has(userWorker)) { // repeat user.worker
                 let statItem = stats.get(userWorker)
-                if (isActive && statItem.its > 0) { // active and prev item = 0 it/s 
+                if (!statItem.isActive) { // overwrite the previous inactive one
+                    stats.set(userWorker, { user, worker, its, sol, lastActive, isActive, version})
+                } else if (isActive && statItem.its > 0) { // active and prev item = 0 it/s. Repeating ones cannot be summed up
                     statItem.sol += sol
                     statItem.its += its
                     stats.set(userWorker, statItem)
