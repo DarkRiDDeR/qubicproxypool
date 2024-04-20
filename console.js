@@ -2,7 +2,8 @@
 import { argv } from 'node:process'
 import { stat } from 'node:fs'
 import { match } from 'node:assert'
-import { confLogger, confUsers } from "./config.js"
+import mysql from 'mysql2/promise'
+import { confLogger, confUsers, confDb } from "./config.js"
 import { dbConnect, dbCreateUser, getCurrentEpoch, getTimestampOfLastWednesday, getPasswordHash, getPrice } from "./functions.js"
 
 /*Launching the Node.js process as:
@@ -22,7 +23,7 @@ if (!argv[2]) {
 
 let dbc
 try {
-    dbc = await dbConnect()
+    dbc = await mysql.createConnection(confDb)
 } catch(err) { 
     log.error('DB connection error: ' + err.message)
     process.exit(1)

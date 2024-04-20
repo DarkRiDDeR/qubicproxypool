@@ -14022,6 +14022,9 @@ textarea.form-control-lg {
   margin: 1em 0 2em;
 }
 
+.footer {
+  position: relative;
+}
 .header-nav-center,
 .footer-copy {
   position: absolute;

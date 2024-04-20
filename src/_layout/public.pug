@@ -10,11 +10,37 @@ html(lang='en')
     block canonical
     block styles
   body
+    .sidebar.sidebar-dark.sidebar-fixed.border-end#sidebar
+      .sidebar-header.border-bottom
+        .sidebar-brand
+          img.sidebar-brand-full(src='/assets/logo.png', alt='Qubic Proxy Pool', style="height:45px")
+            |
+          img.sidebar-brand-narrow(width="32" height="32" src='/assets/logo_icon.png' alt='Qubic Proxy Pool')
+        button.btn-close.d-lg-none(type='button' data-coreui-dismiss='offcanvas' data-coreui-theme="dark" aria-label='Close' onclick='coreui.Sidebar.getInstance(document.querySelector("#sidebar")).toggle()')
+      ul.sidebar-nav(data-coreui="navigation" data-simplebar)
+        li.nav-item
+          a.nav-link(href='/login/')
+            svg.nav-icon
+              use(xlink:href="/vendors/@coreui/icons/free.svg#cil-user")
+            |  Login
+          a.nav-link(href='/register/')
+            svg.nav-icon
+              use(xlink:href="/vendors/@coreui/icons/free.svg#cil-room")
+            |  Register
+      .sidebar-footer.border-top.d-none.d-md-flex      
+        button.sidebar-toggler(type="button" data-coreui-toggle="unfoldable")
+
+
     .wrapper.d-flex.flex-column.min-vh-100
       
       header.header.header-sticky.p-0.mb-4
         .container-fluid.border-bottom.px-4
-          .sidebar-brand
+          button.header-toggler(type="button" onclick="coreui.Sidebar.getInstance(document.querySelector('#sidebar')).toggle()" style="margin-inline-start: -14px;")
+            svg.icon.icon-lg
+              use(xlink:href="/vendors/@coreui/icons/free.svg#cil-menu")
+              |
+
+          //.sidebar-brand
             img.sidebar-brand-full.sidebar-brand-public-light(src='/assets/logo.png', alt='Qubic Proxy Pool', style="height:45px")
             img.sidebar-brand-full.sidebar-brand-public-dark(src='/assets/logo_dark.png', alt='Qubic Proxy Pool', style="height:45px")
 
