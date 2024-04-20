@@ -88,7 +88,7 @@ try {
     if (serverData) {
         // savedata
         fs.writeFile(__dirname + '/data/receive.json', JSON.stringify(serverData), err => { 
-            if(err) throw err
+            if(err) logger.error({err})
         })
 
         try {
@@ -117,7 +117,8 @@ try {
             return map
         }, dbWorkers)
 
-        let stats = new Map() // [user.worker, [user, worker, its, sol, lastActive, isActive, version]]
+        let stats = new Map() // [user.worker, {user, worker, its, sol, lastActive, isActive, version}]
+        let miners = new Map() // current miners stats [user, {countWorker, its, sol, countInactive, isEmpty}] isEmpty - there are workers with zero hashrate or inactive
         //let poolUsers = new Set() 
         let poolWorkers = new Map() // [user.worker, [user, worker]]
         for(let item of serverData) {
@@ -132,8 +133,8 @@ try {
                 user = 'none'
             }
 
-            // none and test user not save
-            if (user.match(/^(none|test)/)) {
+            // none user not save
+            if (user == 'none') {
                 continue
             }
 
@@ -192,11 +193,26 @@ try {
         if (stats) {
             let sql = ''
             stats.forEach(item => {
+                let its = 0
                 totalSolutions += item.sol
                 if (item.isActive) {
-                    totalHashrate += item.its
+                    its = item.its
+                    totalHashrate += its
                     ++totalActiveWorkers
                 }
+
+                if (miners.has(item.user)) {
+                    const minerItem = miners.get(item.user)
+                    minerItem.its += its
+                    minerItem.sol += item.sol
+                    ++minerItem.countWorker
+                    minerItem.isEmpty = minerItem.its ? 0 : 1
+                    if (!item.isActive) ++minerItem.countInactive
+                    miners.set(item.user, minerItem)
+                } else {
+                    miners.set(item.user, {countWorker: 1, its: its, sol: item.sol, countInactive: item.isActive ? 0 : 1, isEmpty: its ? 0 : 1})
+                }
+
                 const userId = dbUsers.get(item.user)
                 const workerId = dbWorkers.get(userId + '.' + item.worker)
                 if (sql) {
@@ -216,6 +232,27 @@ try {
             log.warning('DB end error: ' + err.message)
         }
 
+
+        // save miner stats
+        miners = Array.from(miners, ([name, item]) => {
+            item.miner = name
+            return item
+        })
+        miners.sort((a, b) => {
+            return a.its < b.its;
+        })
+        fs.writeFile(__dirname + '/data/miners.json', JSON.stringify(miners), err => { 
+            if(err) logger.error({err})
+        })
+        miners.map(item => {
+            item.countInactive = null
+            item.isEmpty = null
+            item.miner = item.miner.slice(0, 3) + '******'
+            return item
+        })
+        fs.writeFile(__dirname + '/data/miners-public.json', JSON.stringify(miners), err => { 
+            if(err) logger.error({err})
+        })
 
         // qubic price
         let price = 0

@@ -36,7 +36,7 @@ block view
                     use(xlink:href="/vendors/@coreui/icons/free.svg#cil-people")
                     |
                 .fs-4.fw-semibold 
-                  span 45
+                  span 0
                 .small.text-white.text-opacity-75.text-uppercase.fw-semibold.text-truncate Active workers
                 .progress.progress-white.progress-thin.mt-3
                   .progress-bar(role='progressbar', style='width: 25%', aria-valuenow='25', aria-valuemin='0', aria-valuemax='100')
@@ -260,7 +260,7 @@ block view
         
           //--.col-12.col-lg-8.col-xl-8.col-xxl-8
           h2 Miners
-          .table-responsive
+          .table-responsive(id="table-miners")
               table.table.table-striped.border.mb-0
                 thead.fw-semibold.text-nowrap
                   tr.align-middle
@@ -270,7 +270,7 @@ block view
                     th.bg-body-secondary Solutions
                     th.bg-body-secondary Offline
                 tbody
-                  tr.align-middle
+                //--  tr.align-middle
                     td.text-info 
                       b User 1
                     td.text-info

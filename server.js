@@ -235,7 +235,7 @@ app.get('/api/receive/', nocache, checkAuth, async function(req, res){ // only c
             }
         }
     } catch(err) {
-        logger.error(err)
+        logger.error({err})
     }
     res.json(json)
 })
@@ -243,6 +243,15 @@ app.get('/api/maininfo/', nocache, (req, res) => {
     res.setHeader('x-no-compression', '1')
     res.header("Content-Type",'application/json')
     res.sendFile(__dirname + '/data/maininfo.json')
+})
+app.get('/api/miners/', nocache, (req, res) => {
+    res.setHeader('x-no-compression', '1')
+    res.header("Content-Type",'application/json')
+    if (req.session.userId) {
+        res.sendFile(__dirname + '/data/miners.json')
+    } else {
+        res.sendFile(__dirname + '/data/miners-public.json')
+    }
 })
 
 

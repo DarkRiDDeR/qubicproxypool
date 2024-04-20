@@ -93,51 +93,9 @@ for (const form of Array.prototype.slice.call(elFormsReg)) {
     } catch (error) {
       msgError = 'Error processing data from the server'
     }
-    /*if (msgError) {
-      form.querySelector('.invalid-feedback').textContent = msgError
-      for (const input of form.querySelectorAll('input')) {
-        input.classList.add('is-invalid')
-      }
-      form.classList.remove('was-validated')
-    } else {
-      for (const input of form.querySelectorAll('input')) {
-        input.classList.remove('is-invalid')
-      }
-      form.classList.add('was-validated')
-    }*/
   })(e))
 }
 
-/**
- *   tr.align-middle
-      td User2.w6
- */
-const elPanelWorkers = document.querySelector('#table-panel-workers tbody')
-if (elPanelWorkers) {
-  try {
-    const tick = async () => {
-      let res = await fetch('/api/receive/')
-      res = await res.json()
-      const tbody = document.createElement('tbody');
-      for (const item of res) {
-        const tr = document.createElement('tr')
-        tr.classList.add('align-middle')
-        tr.innerHTML = `<td>${item.alias}</td>`
-          + `<td>${item.version.versionString}</td>`
-          + `<td class="${!item.isActive ? 'text-bg-danger' : item.currentIts == 0 ? 'text-bg-warning' : ''}">${item.currentIts} It/s</td>`
-          + `<td>${item.solutionsFound}</td>`
-          + `<td>${item.lastActive}</td>`
-          + `<td><span class="badge me-1 ${item.isActive ? 'bg-success' : 'bg-danger'}">${item.isActive.toString()}</span></td>`
-        tbody.appendChild(tr)
-      }
-      elPanelWorkers.replaceWith(tbody)
-    }
-    tick()
-    setInterval(tick, 60000)
-  } catch (error) {
-    msgError = 'Error processing data from the server'
-  }
-}
 
 
 const elMainInfo = document.querySelector('#main-info')
@@ -170,6 +128,65 @@ if (elMainInfo) {
         }, 1000)
       }
     })
+    setInterval(tick, 60000)
+  } catch (error) {
+    msgError = 'Error processing data from the server'
+  }
+}
+
+
+const elTableMiners = document.querySelector('#table-miners')
+if (elTableMiners) {
+  const countCols = elTableMiners.querySelector('thead tr').childElementCount
+  try {
+    const tick = async () => {
+      let res = await fetch('/api/miners/')
+      res = await res.json()
+      const tbody = document.createElement('tbody');
+      for (const item of res) {
+        const tr = document.createElement('tr')
+        tr.classList.add('align-middle')
+        tr.innerHTML = `<td>${item.miner}</td>`
+          + `<td>${item.countWorker}</td>`
+          + `<td class="${item.isEmpty ? 'text-bg-warning' : ''}">${item.its} It/s</td>`
+          + `<td>${item.sol}</td>`
+
+        if (countCols > 4) {
+          tr.innerHTML += `<td class="${item.countInactive ? 'text-bg-danger' : ''}">${item.countInactive}</td>`
+        }
+        tbody.appendChild(tr)
+      }
+      elTableMiners.querySelector('tbody').replaceWith(tbody)
+    }
+    tick()
+    setInterval(tick, 60000)
+  } catch (error) {
+    msgError = 'Error processing data from the server'
+  }
+}
+
+
+const elPanelWorkers = document.querySelector('#table-panel-workers tbody')
+if (elPanelWorkers) {
+  try {
+    const tick = async () => {
+      let res = await fetch('/api/receive/')
+      res = await res.json()
+      const tbody = document.createElement('tbody');
+      for (const item of res) {
+        const tr = document.createElement('tr')
+        tr.classList.add('align-middle')
+        tr.innerHTML = `<td>${item.alias}</td>`
+          + `<td>${item.version.versionString}</td>`
+          + `<td class="${!item.isActive ? 'text-bg-danger' : item.currentIts == 0 ? 'text-bg-warning' : ''}">${item.currentIts} It/s</td>`
+          + `<td>${item.solutionsFound}</td>`
+          + `<td>${item.lastActive}</td>`
+          + `<td><span class="badge me-1 ${item.isActive ? 'bg-success' : 'bg-danger'}">${item.isActive.toString()}</span></td>`
+        tbody.appendChild(tr)
+      }
+      elPanelWorkers.replaceWith(tbody)
+    }
+    tick()
     setInterval(tick, 60000)
   } catch (error) {
     msgError = 'Error processing data from the server'
