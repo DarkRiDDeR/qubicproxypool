@@ -19,6 +19,14 @@ block breadcrumb
 block view
   .row
     .col-md-12
-      
-      include ../_partials/about.pug
+      .card.mb-4
+        .card-body
+          h1 Qubic Proxy Pool
+          p 
+            | is a project aimed at cooperative mining in the Qubic network through an intermediary account (in fact, it is not a full-fledged pool) on the server
+            |
+            a(href="https://app.qubic.li" target="_blank") https://app.qubic.li
+            |. At the end of the epoch the received funds are divided depending on the contribution of each user through the PPSTI (Payment per share for time intervals) reward system. This service will be especially useful for miners with small capacities, who will be rewarded depending on their hash rate, not on the number of solutions found.
+          br
+          include ../_partials/about.pug
       

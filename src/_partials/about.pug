@@ -1,379 +1,370 @@
-.card.mb-4
-    .card-body
-      h1 Qubic Proxy Pool
-      p 
-        | is a project aimed at cooperative mining in the Qubic network through an intermediary account (in fact, it is not a full-fledged pool) on the server
-        |
-        a(href="https://app.qubic.li" target="_blank") https://app.qubic.li
-        |. At the end of the epoch the received funds are divided depending on the contribution of each user through the PPSTI (Payment per share for time intervals) reward system. This service will be especially useful for miners with small capacities, who will be rewarded depending on their hash rate, not on the number of solutions found.
-      
+
+h2  Pool rules
+ul
+  li Commission - 1.5%
+  li The calculation of the share of miners is carried out for the era of Qubic from Wednesday 12:00 UTC until the next Wednesday 12:00 UTC, that is 7 days 
+  li The minimum total worker accounting time for an epoch is 12 hours
+  li Payouts are made after the end of the Qubic epoch (Wed 12:00 UTC) and the subsequent distribution of rewards in the network (Wednesday evening/Thursday)
+  li Frequent disconnections and connections to the pool can lead to a ban! Stable mining is important. Pool-hoppers and similar personalities are not needed
+  li For Qubic cryptocurrency payments, be sure to specify your wallet (not exchange), registered on the official resource
+    | 
+    a(href="https://wallet.qubic.li" target="_blank") https://wallet.qubic.li
+    | .
+    | Otherwise, when transferring to an exchange wallet, there can be problems, and you will not receive your payment for a long time
+br
+
+h2 Donate
+p Qubic:
+  | 
+  span.text-info KNIJXAGWQREUSFCFOHGRBAZNAQZAILFQBPFRVWPOECGPFNATPBDOCWUCZKMN
+br
+
+h2 Exchanges with Qubic
+.container.text-center.exchanges-icons
+  .row
+    .col-auto.d-flex.align-items-center
+      a(href="https://safe.trade/" target="_blank")
+        img(src="/assets/img/safetrade.png" alt="SafeTrade")
+    .col-auto.d-flex.align-items-center
+      a(href="https://tradeogre.com/" target="_blank") 
+        img(src="/assets/img/tradeogre.svg" alt="TradeOgre")
+
+h2 PPSTI reward system
+p The pool uses the PPSTI (Payment per share for time intervals) system to calculate rewards. This is a modified version of the PPS (Pay-Per-Share) payment system. 
+p The pool calculates the reward and makes payment for each miner ball sent for a certain time interval, regardless of whether the pool finds a solution or not. The time intervals are evenly distributed throughout the epoch. That is, a miner who has had a stable hash rate for the entire epoch will receive a larger reward than those who joined during the epoch or had fluctuating power.
+p The PPLNS (Pay-Per-Last-N-Shares ) payout system is not used for the reason that finding solutions (sol) is not equal to finding standard blocks when mining cryptocurrency. The number of solutions paid for the work of a miner can change when the algorithm changes, i.e. the price of a solution can be different per epoch. And also in the Qubic network a stable hashrate over a long distance is important, and the PPSTI payout system supports such miners.
+
+
+p.d-inline-flex.gap-1
+  a.btn.btn-primary(data-coreui-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample")
+    | Example calculation
+.collapse#collapseExample
+  .card.card-body
+    p There are 20 hashrate entries for 5 users. Let's calculate the usual average share:
+    .table-responsive
+      table.table.table-striped.border.mb-0
+        thead.fw-semibold.text-nowrap
+          tr.align-middle
+            th.bg-body-secondary User
+            th.bg-body-secondary A (Its)
+            th.bg-body-secondary B (Its)
+            th.bg-body-secondary C (Its)
+            th.bg-body-secondary D (Its)
+            th.bg-body-secondary E (Its)
+        tbody
+          tr.align-middle
+            td 1
+            td 150
+            td 260
+            td 0
+            td 50
+            td 0
+          tr.align-middle
+            td 2
+            td 150
+            td 260
+            td 0
+            td 50
+            td 0
+          tr.align-middle
+            td 3
+            td 150
+            td 260
+            td 0
+            td 50
+            td 0
+          tr.align-middle
+            td 4
+            td 150
+            td 260
+            td 0
+            td 50
+            td 0
+          tr.align-middle
+            td 5
+            td 150
+            td 260
+            td 0
+            td 100
+            td 0
+          tr.align-middle
+            td 6
+            td 150
+            td 260
+            td 0
+            td 100
+            td 0
+          tr.align-middle
+            td 7
+            td 150
+            td 260
+            td 300
+            td 100
+            td 0
+          tr.align-middle
+            td 8
+            td 150
+            td 260
+            td 300
+            td 200
+            td 0
+          tr.align-middle
+            td 9
+            td 150
+            td 260
+            td 300
+            td 200
+            td 0
+          tr.align-middle
+            td 10 
+            td 150
+            td 260
+            td 300
+            td 200
+            td 0
+          tr.align-middle
+            td 11
+            td 150
+            td 260
+            td 300
+            td 200
+            td 0
+          tr.align-middle
+            td 12
+            td 150
+            td 260
+            td 300
+            td 200
+            td 0
+          tr.align-middle
+            td 13
+            td 150
+            td 260
+            td 300
+            td 200
+            td 0
+          tr.align-middle
+            td 14
+            td 150
+            td 260
+            td 300
+            td 200
+            td 0
+          tr.align-middle
+            td 15
+            td 150
+            td 260
+            td 0
+            td 300
+            td 0
+          tr.align-middle
+            td 16
+            td 150
+            td 260
+            td 0
+            td 300
+            td 500
+          tr.align-middle
+            td 17
+            td 150
+            td 260
+            td 300
+            td 300
+            td 500
+          tr.align-middle
+            td 18
+            td 150
+            td 260
+            td 300
+            td 300
+            td 500
+          tr.align-middle
+            td 19
+            td 150
+            td 260
+            td 300
+            td 300
+            td 500
+          tr.align-middle
+            td 20
+            td 150
+            td 260
+            td 300
+            td 300
+            td 500
+          tr.align-middle
+            td.bg-body-secondary Avg. its
+            td.bg-body-secondary 150
+            td.bg-body-secondary 260
+            td.bg-body-secondary 180
+            td.bg-body-secondary 185
+            td.bg-body-secondary 125
+          tr.align-middle
+            td.bg-body-secondary Share in %
+            td.bg-body-secondary 16,67
+            td.bg-body-secondary 28,89
+            td.bg-body-secondary 20
+            td.bg-body-secondary 20,56
+            td.bg-body-secondary 13,89
+    // /..table-responsive  
+    p
       br
-      h2  Pool rules
-      ul
-        li Commission - 1.5%
-        li The calculation of the share of miners is carried out for the era of Qubic from Wednesday 12:00 UTC until the next Wednesday 12:00 UTC, that is 7 days 
-        li The minimum total worker accounting time for an epoch is 12 hours
-        li Payouts are made after the end of the Qubic epoch (Wed 12:00 UTC) and the subsequent distribution of rewards in the network (Wednesday evening/Thursday)
-        li Frequent disconnections and connections to the pool can lead to a ban! Stable mining is important. Pool-hoppers and similar personalities are not needed
-        li For Qubic cryptocurrency payments, be sure to specify your wallet (not exchange), registered on the official resource
-          | 
-          a(href="https://wallet.qubic.li" target="_blank") https://wallet.qubic.li
-          | .
-          | Otherwise, when transferring to an exchange wallet, there can be problems, and you will not receive your payment for a long time
-      br
-
-      h2 Donate
-      p Qubic:
-        | 
-        span.text-info KNIJXAGWQREUSFCFOHGRBAZNAQZAILFQBPFRVWPOECGPFNATPBDOCWUCZKMN
-      br
-
-      h2 Exchanges with Qubic
-      .container.text-center.exchanges-icons
-        .row
-          .col-auto.d-flex.align-items-center
-            a(href="https://safe.trade/" target="_blank")
-              img(src="/assets/img/safetrade.png" alt="SafeTrade")
-          .col-auto.d-flex.align-items-center
-            a(href="https://tradeogre.com/" target="_blank") 
-              img(src="/assets/img/tradeogre.svg" alt="TradeOgre")
-
-      h2 PPSTI reward system
-      p The pool uses the PPSTI (Payment per share for time intervals) system to calculate rewards. This is a modified version of the PPS (Pay-Per-Share) payment system. 
-      p The pool calculates the reward and makes payment for each miner ball sent for a certain time interval, regardless of whether the pool finds a solution or not. The time intervals are evenly distributed throughout the epoch. That is, a miner who has had a stable hash rate for the entire epoch will receive a larger reward than those who joined during the epoch or had fluctuating power.
-      p The PPLNS (Pay-Per-Last-N-Shares ) payout system is not used for the reason that finding solutions (sol) is not equal to finding standard blocks when mining cryptocurrency. The number of solutions paid for the work of a miner can change when the algorithm changes, i.e. the price of a solution can be different per epoch. And also in the Qubic network a stable hashrate over a long distance is important, and the PPSTI payout system supports such miners.
-
-
-      p.d-inline-flex.gap-1
-        a.btn.btn-primary(data-coreui-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample")
-          | Example calculation
-      .collapse#collapseExample
-        .card.card-body
-          p There are 20 hashrate entries for 5 users. Let's calculate the usual average share:
-          .table-responsive
-            table.table.table-striped.border.mb-0
-              thead.fw-semibold.text-nowrap
-                tr.align-middle
-                  th.bg-body-secondary User
-                  th.bg-body-secondary A (Its)
-                  th.bg-body-secondary B (Its)
-                  th.bg-body-secondary C (Its)
-                  th.bg-body-secondary D (Its)
-                  th.bg-body-secondary E (Its)
-              tbody
-                tr.align-middle
-                  td 1
-                  td 150
-                  td 260
-                  td 0
-                  td 50
-                  td 0
-                tr.align-middle
-                  td 2
-                  td 150
-                  td 260
-                  td 0
-                  td 50
-                  td 0
-                tr.align-middle
-                  td 3
-                  td 150
-                  td 260
-                  td 0
-                  td 50
-                  td 0
-                tr.align-middle
-                  td 4
-                  td 150
-                  td 260
-                  td 0
-                  td 50
-                  td 0
-                tr.align-middle
-                  td 5
-                  td 150
-                  td 260
-                  td 0
-                  td 100
-                  td 0
-                tr.align-middle
-                  td 6
-                  td 150
-                  td 260
-                  td 0
-                  td 100
-                  td 0
-                tr.align-middle
-                  td 7
-                  td 150
-                  td 260
-                  td 300
-                  td 100
-                  td 0
-                tr.align-middle
-                  td 8
-                  td 150
-                  td 260
-                  td 300
-                  td 200
-                  td 0
-                tr.align-middle
-                  td 9
-                  td 150
-                  td 260
-                  td 300
-                  td 200
-                  td 0
-                tr.align-middle
-                  td 10 
-                  td 150
-                  td 260
-                  td 300
-                  td 200
-                  td 0
-                tr.align-middle
-                  td 11
-                  td 150
-                  td 260
-                  td 300
-                  td 200
-                  td 0
-                tr.align-middle
-                  td 12
-                  td 150
-                  td 260
-                  td 300
-                  td 200
-                  td 0
-                tr.align-middle
-                  td 13
-                  td 150
-                  td 260
-                  td 300
-                  td 200
-                  td 0
-                tr.align-middle
-                  td 14
-                  td 150
-                  td 260
-                  td 300
-                  td 200
-                  td 0
-                tr.align-middle
-                  td 15
-                  td 150
-                  td 260
-                  td 0
-                  td 300
-                  td 0
-                tr.align-middle
-                  td 16
-                  td 150
-                  td 260
-                  td 0
-                  td 300
-                  td 500
-                tr.align-middle
-                  td 17
-                  td 150
-                  td 260
-                  td 300
-                  td 300
-                  td 500
-                tr.align-middle
-                  td 18
-                  td 150
-                  td 260
-                  td 300
-                  td 300
-                  td 500
-                tr.align-middle
-                  td 19
-                  td 150
-                  td 260
-                  td 300
-                  td 300
-                  td 500
-                tr.align-middle
-                  td 20
-                  td 150
-                  td 260
-                  td 300
-                  td 300
-                  td 500
-                tr.align-middle
-                  td.bg-body-secondary Avg. its
-                  td.bg-body-secondary 150
-                  td.bg-body-secondary 260
-                  td.bg-body-secondary 180
-                  td.bg-body-secondary 185
-                  td.bg-body-secondary 125
-                tr.align-middle
-                  td.bg-body-secondary Share in %
-                  td.bg-body-secondary 16,67
-                  td.bg-body-secondary 28,89
-                  td.bg-body-secondary 20
-                  td.bg-body-secondary 20,56
-                  td.bg-body-secondary 13,89
-          // /..table-responsive  
-          p
-            br
-            | Calculation of share for each time interval (PPSTI):
-          .table-responsive
-            table.table.table-striped.border.mb-0
-              thead.fw-semibold.text-nowrap
-                tr.align-middle
-                  th.bg-body-secondary User
-                  th.bg-body-secondary A (%)
-                  th.bg-body-secondary B (%)
-                  th.bg-body-secondary C (%)
-                  th.bg-body-secondary D (%)
-                  th.bg-body-secondary E (%)
-              tbody
-                tr.align-middle
-                  td 1
-                  td 36,59
-                  td 63,41
-                  td 0
-                  td 0
-                  td 0
-                tr.align-middle
-                  td 2
-                  td 36,59
-                  td 63,41
-                  td 0
-                  td 0
-                  td 0
-                tr.align-middle
-                  td 3
-                  td 36,59
-                  td 63,41
-                  td 0
-                  td 0
-                  td 0
-                tr.align-middle
-                  td 4
-                  td 36,59
-                  td 63,41
-                  td 0
-                  td 0
-                  td 0
-                tr.align-middle
-                  td 5
-                  td 29,41
-                  td 50,98
-                  td 0
-                  td 19,61
-                  td 0
-                tr.align-middle
-                  td 6
-                  td 29,41
-                  td 50,98
-                  td 0
-                  td 19,61
-                  td 0
-                tr.align-middle
-                  td 7
-                  td 18,52
-                  td 32,1
-                  td 37,04
-                  td 12,35
-                  td 0
-                tr.align-middle
-                  td 8
-                  td 16,48
-                  td 28,57
-                  td 32,97
-                  td 21,98
-                  td 0
-                tr.align-middle
-                  td 9
-                  td 16,48
-                  td 28,57
-                  td 32,97
-                  td 21,98
-                  td 0
-                tr.align-middle
-                  td 10
-                  td 16,48
-                  td 28,57
-                  td 32,97
-                  td 21,98
-                  td 0
-                tr.align-middle
-                  td 11
-                  td 16,48
-                  td 28,57
-                  td 32,97
-                  td 21,98
-                  td 0
-                tr.align-middle
-                  td 12
-                  td 16,48
-                  td 28,57
-                  td 32,97
-                  td 21,98
-                  td 0
-                tr.align-middle
-                  td 13
-                  td 16,48
-                  td 28,57
-                  td 32,97
-                  td 21,98
-                  td 0
-                tr.align-middle
-                  td 14
-                  td 16,48
-                  td 28,57
-                  td 32,97
-                  td 21,98
-                  td 0
-                tr.align-middle
-                  td 15
-                  td 21,13
-                  td 36,62
-                  td 0
-                  td 42,25
-                  td 0
-                tr.align-middle
-                  td 16
-                  td 12,4
-                  td 21,49
-                  td 0
-                  td 24,79
-                  td 41,32
-                tr.align-middle
-                  td 17
-                  td 9,93
-                  td 17,22
-                  td 19,87
-                  td 19,87
-                  td 33,11
-                tr.align-middle
-                  td 18
-                  td 9,93
-                  td 17,22
-                  td 19,87
-                  td 19,87
-                  td 33,11
-                tr.align-middle
-                  td 19
-                  td 9,93
-                  td 17,22
-                  td 19,87
-                  td 19,87
-                  td 33,11
-                tr.align-middle
-                  td 20
-                  td 9,93
-                  td 17,22
-                  td 19,87
-                  td 19,87
-                  td 33,11
-                tr.align-middle
-                  td.bg-body-secondary Avg. %
-                  td.bg-body-secondary 19,82
-                  td.bg-body-secondary 34,36
-                  td.bg-body-secondary 17,37
-                  td.bg-body-secondary 19,77
-                  td.bg-body-secondary 8,69
+      | Calculation of share for each time interval (PPSTI):
+    .table-responsive
+      table.table.table-striped.border.mb-0
+        thead.fw-semibold.text-nowrap
+          tr.align-middle
+            th.bg-body-secondary User
+            th.bg-body-secondary A (%)
+            th.bg-body-secondary B (%)
+            th.bg-body-secondary C (%)
+            th.bg-body-secondary D (%)
+            th.bg-body-secondary E (%)
+        tbody
+          tr.align-middle
+            td 1
+            td 36,59
+            td 63,41
+            td 0
+            td 0
+            td 0
+          tr.align-middle
+            td 2
+            td 36,59
+            td 63,41
+            td 0
+            td 0
+            td 0
+          tr.align-middle
+            td 3
+            td 36,59
+            td 63,41
+            td 0
+            td 0
+            td 0
+          tr.align-middle
+            td 4
+            td 36,59
+            td 63,41
+            td 0
+            td 0
+            td 0
+          tr.align-middle
+            td 5
+            td 29,41
+            td 50,98
+            td 0
+            td 19,61
+            td 0
+          tr.align-middle
+            td 6
+            td 29,41
+            td 50,98
+            td 0
+            td 19,61
+            td 0
+          tr.align-middle
+            td 7
+            td 18,52
+            td 32,1
+            td 37,04
+            td 12,35
+            td 0
+          tr.align-middle
+            td 8
+            td 16,48
+            td 28,57
+            td 32,97
+            td 21,98
+            td 0
+          tr.align-middle
+            td 9
+            td 16,48
+            td 28,57
+            td 32,97
+            td 21,98
+            td 0
+          tr.align-middle
+            td 10
+            td 16,48
+            td 28,57
+            td 32,97
+            td 21,98
+            td 0
+          tr.align-middle
+            td 11
+            td 16,48
+            td 28,57
+            td 32,97
+            td 21,98
+            td 0
+          tr.align-middle
+            td 12
+            td 16,48
+            td 28,57
+            td 32,97
+            td 21,98
+            td 0
+          tr.align-middle
+            td 13
+            td 16,48
+            td 28,57
+            td 32,97
+            td 21,98
+            td 0
+          tr.align-middle
+            td 14
+            td 16,48
+            td 28,57
+            td 32,97
+            td 21,98
+            td 0
+          tr.align-middle
+            td 15
+            td 21,13
+            td 36,62
+            td 0
+            td 42,25
+            td 0
+          tr.align-middle
+            td 16
+            td 12,4
+            td 21,49
+            td 0
+            td 24,79
+            td 41,32
+          tr.align-middle
+            td 17
+            td 9,93
+            td 17,22
+            td 19,87
+            td 19,87
+            td 33,11
+          tr.align-middle
+            td 18
+            td 9,93
+            td 17,22
+            td 19,87
+            td 19,87
+            td 33,11
+          tr.align-middle
+            td 19
+            td 9,93
+            td 17,22
+            td 19,87
+            td 19,87
+            td 33,11
+          tr.align-middle
+            td 20
+            td 9,93
+            td 17,22
+            td 19,87
+            td 19,87
+            td 33,11
+          tr.align-middle
+            td.bg-body-secondary Avg. %
+            td.bg-body-secondary 19,82
+            td.bg-body-secondary 34,36
+            td.bg-body-secondary 17,37
+            td.bg-body-secondary 19,77
+            td.bg-body-secondary 8,69

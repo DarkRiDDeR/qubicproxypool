@@ -100,6 +100,7 @@ for (const form of Array.prototype.slice.call(elFormsReg)) {
 
 const elMainInfo = document.querySelector('#main-info')
 if (elMainInfo) {
+  let incomePerOneIts = netSolsPerHour = netHashrate = price = 0
   const elActiveWorkers = elMainInfo.querySelector('.info-active-workers .fs-4.fw-semibold span')
   elHashrate = elMainInfo.querySelector('.info-hashrate .fs-4.fw-semibold span')
   elSol = elMainInfo.querySelector('.info-solutions .fs-4.fw-semibold span')
@@ -112,11 +113,15 @@ if (elMainInfo) {
       let res = await fetch('/api/maininfo/')
       res = await res.json()
       if (res) {
+        incomePerOneIts = res.incomePerOneIts
+        netSolsPerHour = res.netSolsPerHour
+        netHashrate = res.netHashrate
+        price = res.price
         if (elActiveWorkers) elActiveWorkers.textContent = res.total.activeWorkers
         if (elHashrate) elHashrate.textContent = res.total.hashrate
         if (elSol) elSol.textContent = res.total.solutions
-        if (elPrice) elPrice.textContent = res.price
-        if (elNetwork) elNetwork.textContent = res.netHashrate
+        if (elPrice) elPrice.textContent = price
+        if (elNetwork) elNetwork.textContent = netHashrate
         if (elSolPrice) elSolPrice.textContent = Math.round(res.curSolPrice * 100) / 100
         if (elAge) elAge.textContent = Math.floor((res.updateTime - new Date().getTime()) / 1000)
       }
@@ -132,8 +137,42 @@ if (elMainInfo) {
   } catch (error) {
     msgError = 'Error processing data from the server'
   }
-}
 
+  const formProfit = document.querySelector('#profitCalculator')
+  const profitTable = document.querySelector('#profitCalcTable')
+  if (formProfit && profitTable) {
+    const profitTableCollapse = new coreui.Collapse('#profitCalcTable', {
+      toggle: false
+    })
+
+    
+    formProfit.addEventListener('submit', e => {
+      e.preventDefault()
+      const hr = parseInt(formProfit.querySelector('input[id="profitCalcHashrate"]').value)
+      const comms = parseFloat(formProfit.querySelector('input[id="profitCalcComs"]').value) / 100
+      const powerConsume = parseFloat(formProfit.querySelector('input[id="profitCalcPower"]').value)
+      const powerCost = parseFloat(formProfit.querySelector('input[id="profitCalcPowerCost"]').value)
+      let perDay = hr * incomePerOneIts
+      let perSols = 24 * hr * netSolsPerHour / netHashrate
+
+      let html = ''
+      const items = [['Day', 1], ['Week', 7], ['Month', 31]]
+      items.forEach(i => {
+        const cost = i[1] * perDay * comms + i[1] * 24 * powerConsume / 1000 * powerCost
+        html +=  `<tr>`
+          + `<td>${i[0]}</td>`
+          + `<td>${Math.round(i[1] * perSols * 100) / 100}</td>`
+          + `<td>${Math.round(i[1] * perDay / price)}</td>`
+          + `<td>${Math.round(i[1] * perDay * 100) / 100}$</td>`
+          + `<td>-${Math.round(cost * 100) / 100}$</td>`
+          + `<td>${Math.round((i[1] * perDay - cost) * 100) / 100}$</td>`
+          + `<tr>`
+      })
+      profitTable.querySelector('tbody').innerHTML = html
+      profitTableCollapse.show()
+    })
+  }
+}
 
 const elTableMiners = document.querySelector('#table-miners')
 if (elTableMiners) {
@@ -193,3 +232,4 @@ if (elPanelWorkers) {
   }
 }
 //# sourceMappingURL=main.js.map
+

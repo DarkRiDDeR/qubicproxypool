@@ -1,0 +1,58 @@
+h2 Profit calculator
+form.row.g-3(id="profitCalculator")
+   div.col-12.col-sm-6.col-xl-3
+      label.form-label(for="profitCalcHashrate") Hashrate
+      .input-group
+         .input-group-text It/s
+         input.form-control(id="profitCalcHashrate" placeholder="Hashrate" type="number" value="0")
+   div.col-12.col-sm-6.col-xl-3
+      label.form-label(for="profitCalcComs") Commissions
+      .input-group
+         .input-group-text %
+         input.form-control(id="profitCalcComs" placeholder="Commissions" value="1.5")
+   div.col-12.col-sm-6.col-xl-3
+      label.form-label(for="profitCalcPower") Power consume
+      .input-group
+         .input-group-text Watts
+         input.form-control(id="profitCalcPower" placeholder="Power consume" value="0" type="number")
+   div.col-12.col-sm-6.col-xl-3
+      label.form-label(for="profitCalcPowerCost") Power cost
+      .input-group
+         .input-group-text $/kWh
+         input.form-control(id="profitCalcPowerCost" placeholder="Power cost" value="0.01")
+   .col-12 
+      button.btn.btn-primary(type="submit") Calculate
+
+br
+.table-responsive.collapse(id="profitCalcTable")
+   table.table.border.mb-0
+      thead.fw-semibold
+         tr.align-middle
+         th.bg-body-secondary Term
+         th.bg-body-secondary Revenue (Sol)
+         th.bg-body-secondary Revenue (Qubic)
+         th.bg-body-secondary Revenue 
+         th.bg-body-secondary Power and commissions
+         th.bg-body-secondary Profit
+      tbody
+         tr
+         td Day
+         td 0
+         td 0
+         td 0
+         td 0
+         td 0
+         tr
+         td Week
+         td 0
+         td 0
+         td 0
+         td 0
+         td 0
+         tr
+         td Month
+         td 0
+         td 0
+         td 0
+         td 0
+         td 0
