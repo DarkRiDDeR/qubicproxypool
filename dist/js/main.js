@@ -177,25 +177,27 @@ if (elMainInfo) {
 const elTableMiners = document.querySelector('#table-miners')
 if (elTableMiners) {
   const countCols = elTableMiners.querySelector('thead tr').childElementCount
+  const tbody = elTableMiners.querySelector('tbody')
   try {
     const tick = async () => {
       let res = await fetch('/api/miners/')
       res = await res.json()
-      const tbody = document.createElement('tbody');
+      let html = ''
       for (const item of res) {
         const tr = document.createElement('tr')
         tr.classList.add('align-middle')
-        tr.innerHTML = `<td>${item.miner}</td>`
+        html += `<tr>`    
+          + `<td>${item.miner}</td>`
           + `<td>${item.countWorker}</td>`
           + `<td class="${item.isEmpty ? 'text-bg-warning' : ''}">${item.its} It/s</td>`
           + `<td>${item.sol}</td>`
 
         if (countCols > 4) {
-          tr.innerHTML += `<td class="${item.countInactive ? 'text-bg-danger' : ''}">${item.countInactive}</td>`
+          html += `<td class="${item.countInactive ? 'text-bg-danger' : ''}">${item.countInactive}</td>`
         }
-        tbody.appendChild(tr)
+        html += `<t/r>`
       }
-      elTableMiners.querySelector('tbody').replaceWith(tbody)
+      tbody.innerHTML = html
     }
     tick()
     setInterval(tick, 60000)
@@ -211,19 +213,18 @@ if (elPanelWorkers) {
     const tick = async () => {
       let res = await fetch('/api/receive/')
       res = await res.json()
-      const tbody = document.createElement('tbody');
+      let html = ''
       for (const item of res) {
-        const tr = document.createElement('tr')
-        tr.classList.add('align-middle')
-        tr.innerHTML = `<td>${item.alias}</td>`
+        html += `<tr class="align-middle">`
+          + `<td>${item.alias}</td>`
           + `<td>${item.version.versionString}</td>`
           + `<td class="${!item.isActive ? 'text-bg-danger' : item.currentIts == 0 ? 'text-bg-warning' : ''}">${item.currentIts} It/s</td>`
           + `<td>${item.solutionsFound}</td>`
           + `<td>${item.lastActive}</td>`
           + `<td><span class="badge me-1 ${item.isActive ? 'bg-success' : 'bg-danger'}">${item.isActive.toString()}</span></td>`
-        tbody.appendChild(tr)
+          + `<tr>`
       }
-      elPanelWorkers.replaceWith(tbody)
+      elPanelWorkers.innerHTML = html
     }
     tick()
     setInterval(tick, 60000)
