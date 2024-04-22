@@ -18,7 +18,8 @@ const logger = pino(pino.destination({
 const userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0'
 const timeout = 30000
 let serverData = ''
-let response, result, token
+let serverToken, serverUserId
+let response, result
 let dbc
 
 
@@ -32,6 +33,21 @@ try {
         })
         serverData = await response.json()
     } else {
+        /**
+         {
+            success: true,
+            token: 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImExMmj4',
+            refreshToken: 'KLHRA0so746tiygNrhxRHHTM3H4xA/4WbI3',
+            user: {
+                id: 'a12ef9e9-3116-4aca-b55e-1d641',
+                name: 'darkridderr@ya.ru',
+                avatar: null,
+                status: 'online',
+                privileges: [],
+                is2FAEnabled: false
+            }
+            }
+         */
         let postData = JSON.stringify({ 'userName': confQubic.login, 'password': confQubic.password, 'twoFactorCode': '' })
         response  = await fetch('https://api.qubic.li/Auth/Login', {
             method: 'POST',
@@ -45,9 +61,10 @@ try {
         })
 
         result = await response.json()
-        token = result.token
+        serverToken = result.token
+        serverUserId = result.user.id
 
-        if (!token) {
+        if (!serverToken) {
             logger.error(result, 'Error token')
         } else {
 
@@ -75,11 +92,11 @@ try {
             * https://api.qubic.li/My/Pool/c3b45fea-e748-428f-96fe-222d722682b8/Performance
             * https://api.qubic.li/My/MinerControl
             */
-            response  = await fetch('https://api.qubic.li/My/Pool/c3b45fea-e748-428f-96fe-222d722682b8/Performance', {
+            response  = await fetch(`https://api.qubic.li/My/MinerControl`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
+                    'Authorization': `Bearer ${serverToken}`,
                     'User-Agent': userAgent
                 },
                 timeout: timeout,
@@ -88,8 +105,8 @@ try {
         }
     }
 
+
     if (serverData.miners) {
-        const serverFoundSolutions = serverData.foundSolutions
         // savedata
         serverData = serverData.miners
         fs.writeFile(__dirname + '/data/receive.json', JSON.stringify(serverData), err => { 
@@ -285,16 +302,35 @@ try {
         
 
         //Fetches and returns network statistics
-        response = await fetch('https://api.qubic.li/Score/Get', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-                'User-Agent': userAgent
-            },
-            timeout: 10000,
-        })
-        serverData = await response.json()
+        serverData = ''
+        let responsePerformance = ''
+        try {
+            responsePerformance = await fetch(`https://api.qubic.li/My/Pool/${serverUserId}/Performance`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${serverToken}`,
+                    'User-Agent': userAgent
+                },
+                timeout: timeout,
+            })
+            responsePerformance = await responsePerformance.json()
+
+            response = await fetch('https://api.qubic.li/Score/Get', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${serverToken}`,
+                    'User-Agent': userAgent
+                },
+                timeout: 10000,
+            })
+            serverData = await response.json()
+        } catch(err) {
+            logger.warn({err})
+            serverData = ''
+        }
+
         if (serverData) {
             const now = new Date().getTime()
             const millisecondsInWweek = 604800000
@@ -322,7 +358,7 @@ try {
                     incomePerOneIts,
                     curSolPrice,
                     total: {
-                        solutions: serverFoundSolutions, //totalSolutions,
+                        solutions: responsePerformance.foundSolutions, //totalSolutions,
                         hashrate: totalHashrate,
                         activeWorkers: totalActiveWorkers
                     }
