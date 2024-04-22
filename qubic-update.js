@@ -70,7 +70,12 @@ try {
                 }
             ],
             */
-            response  = await fetch('https://api.qubic.li/My/MinerControl', {
+           /**
+            * let Ke=`/My/Pool/${this.configuration.encodeParam({name:"id",value:de,in:"path",style:"simple",explode:!1,dataType:"string",dataFormat:"uuid"})}/Performanc
+            * https://api.qubic.li/My/Pool/c3b45fea-e748-428f-96fe-222d722682b8/Performance
+            * https://api.qubic.li/My/MinerControl
+            */
+            response  = await fetch('https://api.qubic.li/My/Pool/c3b45fea-e748-428f-96fe-222d722682b8/Performance', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -80,13 +85,13 @@ try {
                 timeout: timeout,
             })
             serverData = await response.json()
-            serverData = serverData.miners
         }
     }
 
-
-    if (serverData) {
+    if (serverData.miners) {
+        const serverFoundSolutions = serverData.foundSolutions
         // savedata
+        serverData = serverData.miners
         fs.writeFile(__dirname + '/data/receive.json', JSON.stringify(serverData), err => { 
             if(err) logger.error({err})
         })
@@ -151,6 +156,7 @@ try {
             if (stats.has(userWorker)) { // repeat user.worker
                 let statItem = stats.get(userWorker)
                 if (!statItem.isActive) { // overwrite the previous inactive one
+                    sol += statItem.sol
                     stats.set(userWorker, { user, worker, its, sol, lastActive, isActive, version})
                 } else if (isActive && statItem.its > 0) { // active and prev item = 0 it/s. Repeating ones cannot be summed up
                     statItem.sol += sol
@@ -316,7 +322,7 @@ try {
                     incomePerOneIts,
                     curSolPrice,
                     total: {
-                        solutions: totalSolutions,
+                        solutions: serverFoundSolutions, //totalSolutions,
                         hashrate: totalHashrate,
                         activeWorkers: totalActiveWorkers
                     }
@@ -325,23 +331,6 @@ try {
                     if(err) throw err
                 }
             )
-
-            /**
-                print(f'Current epoch: {make_light_blue(f"{currentEpochNumber}")}')
-                print(f'Epoch start UTC: {make_light_yellow(f"{epochBegin}")}')
-                print(f'Epoch end UTC: {make_light_yellow(f"{epochEnd}")}')
-                print(f'Epoch progress: {make_light_yellow(f"{100 * progress:.1f}%")}\n')
-                print('Network Info')
-                print(f'Estimated network hashrate: {make_light_blue(f"{netHashrate:,} it/s")}')
-                print(f'Average score: {make_light_yellow(f"{netAvgScores:.1f}")}')
-                print(f'Scores per hour: {make_light_yellow(f"{netSolsPerHour:.1f}")}\n')
-                print('Income Estimations')
-                print(f'Qubic price: {make_light_yellow(f"{qubic_price:.8f}$")}\n')
-                print(f'Estimated income per 1 it/s per day: {make_light_green(f"{incomePerOneIts:.4f}$")}')
-                print(f'Estimated income per day: {make_light_green(f"{myHashrate * incomePerOneIts:.2f}$")}')
-                print(f'Estimated income per 1 sol: {make_light_green(f"{curSolPrice:.2f}$")}')
-                print(f'Estimated sols per day: {make_light_green(f"{24 * myHashrate * netSolsPerHour / netnetHashrate_hashrate:.1f}")}\n')
-             */
         }
     } else {
         logger.warning('Error: not miners data from server')

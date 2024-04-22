@@ -25,7 +25,7 @@ let dbc
 try {
     dbc = await mysql.createConnection(confDb)
 } catch(err) { 
-    log.error('DB connection error: ' + err.message)
+    console.log('DB connection error: ' + err.message)
     process.exit(1)
 }
 
@@ -68,10 +68,10 @@ if (argv[2] == 'install') {
     progress = Math.round(progress * 10000) / 100
     let startDate = new Date(getTimestampOfLastWednesday())
     console.log(`Epoch=${epoch}; Progress: ${progress}%; Start date: ` + startDate.toISOString())
-} else if (argv[2] == 'calculate') {
-
 } else if (argv[2] == 'price') {
     console.log(await getPrice())
+} else if (argv[2] == 'calculate') {
+
 } else {
     console.error('Error: command not find')
 }
