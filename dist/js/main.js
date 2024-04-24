@@ -189,13 +189,13 @@ if (elTableMiners) {
         html += `<tr>`    
           + `<td>${item.miner}</td>`
           + `<td>${item.countWorker}</td>`
-          + `<td class="${item.isEmpty ? 'text-bg-warning' : ''}">${item.its} It/s</td>`
+          + `<td class="${item.countInactive || item.isEmpty ? 'text-bg-warning' : ''}">${item.its} It/s</td>`
           + `<td>${item.sol}</td>`
 
         if (countCols > 4) {
           html += `<td class="${item.countInactive ? 'text-bg-danger' : ''}">${item.countInactive}</td>`
         }
-        html += `<t/r>`
+        html += `</tr>`
       }
       tbody.innerHTML = html
     }

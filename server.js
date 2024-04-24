@@ -196,8 +196,8 @@ app.get('/logout/', function(req, res){
 app.get('/panel/', checkAuth, function(req, res){
     res.render('dashboard.pug')
 })
-app.get('/panel/calc/', checkAuth, function(req, res){
-    res.render('calc.pug')
+app.get('/panel/stats/', checkAuth, function(req, res){
+    res.render('stats.pug')
 })
 app.get('/panel/profile/', checkAuth, async function(req, res, next){
     let dbc

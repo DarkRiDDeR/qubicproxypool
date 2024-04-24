@@ -372,7 +372,7 @@ try {
         logger.warning('Error: not miners data from server')
     }
 } catch (err) {
-    logger.error(err)
+    logger.error({err})
     if (dbc) {
         dbc.end()
     }
