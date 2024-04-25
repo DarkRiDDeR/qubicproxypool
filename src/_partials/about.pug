@@ -1,16 +1,40 @@
 
 h2  Pool rules
 ul
-  li Commission - 1.5%
-  li The calculation of the share of miners is carried out for the era of Qubic from Wednesday 12:00 UTC until the next Wednesday 12:00 UTC, that is 7 days 
+  li Active pool - qubic.li CPU/GPU Mining (Fixed Reward 85%)
+  li The commission of Qubic.li  - 15%
+  li Intermediary commission of QubicProxyPool - 1%
+  li The calculation of the share of miners is carried out for the era of Qubic from Wednesday 13:00 UTC until the next Wednesday 12:00 UTC, that is 7 days 
+  li The first hour of the new epoch is not taken into account due to the transition and connection of new miners
   li The minimum total worker accounting time for an epoch is 12 hours
-  li Payouts are made after the end of the Qubic epoch (Wed 12:00 UTC) and the subsequent distribution of rewards in the network (Wednesday evening/Thursday)
+  li Payouts are made after the epoch has ended (Wednesday 12 UTC), need time to calculate. Without any abnormal activitiy and a stable network, QubicProxyPool will get Qubic coins until Friday (23:59 UTC).  Then payments will be made to users
   li Frequent disconnections and connections to the pool can lead to a ban! Stable mining is important. Pool-hoppers and similar personalities are not needed
   li For Qubic cryptocurrency payments, be sure to specify your wallet (not exchange), registered on the official resource
     | 
     a(href="https://wallet.qubic.li" target="_blank") https://wallet.qubic.li
     | .
     | Otherwise, when transferring to an exchange wallet, there can be problems, and you will not receive your payment for a long time
+
+p.d-inline-flex.gap-1
+    a.btn.btn-primary(data-coreui-toggle="collapse" href="#collapseQubicliMining" role="button" aria-expanded="false" aria-controls="collapseExample")
+      | Description of Fixed Mining from Qubic.li 
+.collapse#collapseQubicliMining
+  .card.card-body
+    h4 Description
+    p This Pool uses a single payment system.
+    p At the end of each Epoch, the average score for that Epoch is determined and topped up by 6%. This total amount represents 100% of the revenue that can be earned, which is a maximum of 1,479,289,940 QUS. Of this amount, 15% is being used to pay the mining-fee as well as Pool/Computor Operation. 
+    h4 Example
+    ol
+      li The average score for the current Epoch is 100 points. You earned 55 points.
+      li The average score of 100 points is topped up by 6%, resulting in 106 points.
+    p Your 55 points represent 51.89% of this amount.
+    p The maximum revenue for one ID is 1,479,289,940 QUS. We deduct directly the extra miner fee for the GPU-miner and a Pool/Computor Operation fee. As a result a payment of 85% will be done at once.
+    p 1,257,396,449 QUS per ID. You will receive 51.89% of 1,257,396,449 QUS, which is 652,463,017 QUS.
+    p Payment will typically be completed within 24h after the epoch ends.
+    h4 When Payout
+    p In Qubic there is a weekly emission of Qubic. From this emission the pool users are paid. Normally this payout is one week after the epoch has ended. This pool send you the Qubic in advance. Directly after the epoch has ended.
+    p After the Epoch has ended (Wednesday 12 UTC), we need time to calculate and cross check the delivered solutions. When this is done, you will see an entry in your payout history with status "pending". Without any abnormal activitiy and a stable network, you will get your Qubic until Friday (23:59 UTC).
+    p Please be patient and wait for this period. If you haven't received it by saturday, contact one of our team. We may inform you in discord if there is a general delay in payouts. 
 br
 
 h2 Donate
