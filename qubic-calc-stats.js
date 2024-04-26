@@ -39,7 +39,7 @@ try {
 }
 
 try {
-    let data = await calculateStatistics(dbc, 105)
+    let data = await calculateStatistics(dbc)
     /*data = Object.entries(data.users)
     data.forEach(([key, item]) => {
         const potencialSols = 7 * 24 * item.statistics[0] * netSolsPerHour / netHashrate
