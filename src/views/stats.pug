@@ -32,79 +32,38 @@ block view
                 tr.align-middle
                   th.bg-body-secondary Alias
                   th.bg-body-secondary(title="Average hashrate in the epoch") Avg. hashrate
-                  th.bg-body-secondary(title="Solutions") Sol
                   th.bg-body-secondary.text-center Activity in the epoch
                   th.bg-body-secondary.text-center Status
-                  th.bg-body-secondary Last active
+                  th.bg-body-secondary Last activity
               tbody
-                tr.align-middle
-                  td
-                    .text-nowrap Yiorgos Avraamu
-                  td
-                    | 55 It/s
-                  td
-                    | 1 
-                  td
-                    .d-flex.justify-content-between.align-items-baseline
-                      .fw-semibold 50%
-                      .text-nowrap.small.text-body-secondary.ms-3 Jun 11, 2023 - Jul 10, 2023
-                    .progress.progress-thin
-                      .progress-bar.bg-danger(role='progressbar', style='width: 50%', aria-valuenow='50', aria-valuemin='0', aria-valuemax='100')
-                  td.text-center
-                    <span class="badge me-1 bg-danger">Danger</span>
-                  td
-                    .fw-semibold.text-nowrap 	23.03.2024 04:02
-                tr.align-middle
-                  td
-                    .text-nowrap Avram Tarasios
-                  td
-                    | 55 It/s
-                  td
-                    | 1 
-                  td
-                    .d-flex.justify-content-between.align-items-baseline
-                      .fw-semibold 0%
-                      .text-nowrap.small.text-body-secondary.ms-3 Jun 11, 2023 - Jul 10, 2023
-                    .progress.progress-thin
-                      .progress-bar.bg-info(role='progressbar', style='width: 0%', aria-valuenow='0', aria-valuemin='0', aria-valuemax='100')
-                  td.text-center
-                    <span class="badge me-1 bg-dark">Dead</span>
-                  td
-                    .fw-semibold.text-nowrap 	23.03.2024 04:02
-                tr.align-middle
-                  td
-                    .text-nowrap Quintin Ed
-                  td
-                    | 55 It/s
-                  td
-                    | 1 
-                  td
-                    .d-flex.justify-content-between.align-items-baseline
-                      .fw-semibold 74%
-                      .text-nowrap.small.text-body-secondary.ms-3 Jun 11, 2023 - Jul 10, 2023
-                    .progress.progress-thin
-                      .progress-bar.bg-warning(role='progressbar', style='width: 74%', aria-valuenow='74', aria-valuemin='0', aria-valuemax='100')
-                  td.text-center
-                    <span class="badge me-1 bg-warning">Warning</span>
-                  td
-                    .fw-semibold.text-nowrap 	23.03.2024 04:02
-                tr.align-middle
-                  td
-                    .text-nowrap Enéas Kwadwo
-                  td
-                    | 55 It/s
-                  td
-                    | 1 
-                  td
-                    .d-flex.justify-content-between.align-items-baseline
-                      .fw-semibold 98%
-                      .text-nowrap.small.text-body-secondary.ms-3 Jun 11, 2023 - Jul 10, 2023
-                    .progress.progress-thin
-                      .progress-bar.bg-success(role='progressbar', style='width: 98%', aria-valuenow='98', aria-valuemin='0', aria-valuemax='100')
-                  td.text-center
-                    <span class="badge me-1 bg-success">Success</span>
-                  td
-                    .fw-semibold.text-nowrap 	23.03.2024 04:02
+                each worker in workers
+                  tr
+                    td= worker[0]
+                    td #{worker[1]} It/s
+                    td
+                      .d-flex.justify-content-between.align-items-baseline
+                        .fw-semibold #{worker[2]}%
+                        //.text-nowrap.small.text-body-secondary.ms-3 Jun 11, 2023 - Jul 10, 2023
+                      .progress.progress-thin
+                        if worker[2] >= 80
+                          .progress-bar.bg-success(role='progressbar', style=`width: ${worker[2]}%`, aria-valuenow=worker[2], aria-valuemin='0', aria-valuemax='100')
+                        else if worker[2] >= 30
+                          .progress-bar.bg-warning(role='progressbar', style=`width: ${worker[2]}%`, aria-valuenow=worker[2], aria-valuemin='0', aria-valuemax='100')
+                        else if worker[2] >= 1
+                          .progress-bar.bg-danger(role='progressbar', style=`width: ${worker[2]}%`, aria-valuenow=worker[2], aria-valuemin='0', aria-valuemax='100')
+                        else
+                          .progress-bar.bg-info(role='progressbar', style=`width: ${worker[2]}%`, aria-valuenow=worker[2], aria-valuemin='0', aria-valuemax='100')
+                    td.text-center
+                      if worker[2] >= 80
+                        <span class="badge me-1 bg-success">Success</span>
+                      else if worker[2] >= 30
+                        <span class="badge me-1 bg-warning">Warning</span>
+                      else if worker[2] >= 1
+                        <span class="badge me-1 bg-danger">Danger</span>
+                      else
+                        <span class="badge me-1 bg-dark">Dead</span>
+                    td= worker[3]
+
       .mb-4    
         h2 Miners
         .table-responsive
@@ -114,10 +73,11 @@ block view
                   th.bg-body-secondary Miners
                   th.bg-body-secondary(title="Average hashrate in the epoch") Avg. hashrate
                   th.bg-body-secondary(title="Percentage of total contribution") Prct. (PPSTI)
-                  th.bg-body-secondary(title="Solutions") Sol
-                  th.bg-body-secondary(title="Сalculated number of solutions") Projected revenue
+                  th.bg-body-secondary(title="Current solutions") Current sols (%)
+                  th.bg-body-secondary(title="Potential solutions per epoch") Potential sols
+                  th.bg-body-secondary(title="Potential revenue per epoch") Potential revenue
               tbody
-                tr.align-middle
+                //--tr.align-middle
                   td.text-info 
                     b User 1
                   td.text-info
@@ -128,66 +88,16 @@ block view
                     b 3
                   td.text-info
                     b 3.2
-                tr.align-middle
-                  //--.table-group-divider
-                  td yt******
-                  td 921 It/s
-                  td 8.12%
-                  td 3
-                  td 3.2
-                tr.align-middle
-                  td Us******
-                  td 921 It/s
-                  td 8.12%
-                  td 3
-                  td 3.2
-                tr.align-middle
-                  td fd******
-                  td 921	It/s
-                  td 8.12%
-                  td 3
-                  td 3.2
-                tr.align-middle
-                  td re******
-                  td 921	It/s
-                  td 8.12%
-                  td 3
-                  td 3.2
-                tr.align-middle
-                  td oi******
-                  td 921	It/s
-                  td 8.12%
-                  td 3
-                  td 3.2
-                tr.align-middle
-                  td po******
-                  td 921	It/s
-                  td 8.12%
-                  td 3
-                  td 3.2
-                tr.align-middle
-                  td Us******
-                  td 921	It/s
-                  td 8.12%
-                  td 3
-                  td 3.2
-                tr.align-middle
-                  td Us******
-                  td 921	It/s
-                  td 8.12%
-                  td 3
-                  td 3.2
-                tr.align-middle
-                  td Us******
-                  td 921	It/s
-                  td 8.12%
-                  td 3
-                  td 3.2
-                tr.align-middle
-                  td Us******
-                  td 921	It/s
-                  td 8.12%
-                  td 3
-                  td 3.2
+                  td.text-info
+                    b 3.2
+                each user in users
+                  tr
+                    td= user[0]
+                    td #{user[2]} It/s
+                    td #{user[2]}%
+                    td= user[3]
+                    td= user[4]
+                    td #{user[5]}$
+               
     // /.col
   // /.row

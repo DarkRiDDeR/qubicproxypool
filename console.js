@@ -4,7 +4,7 @@ import { stat } from 'node:fs'
 import { match } from 'node:assert'
 import mysql from 'mysql2/promise'
 import { confLogger, confUsers, confDb } from "./config.js"
-import { dbConnect, dbCreateUser, getCurrentEpoch, getTimestampOfLastWednesday, getPasswordHash, getPrice } from "./functions.js"
+import { dbConnect, dbCreateUser, getCurrentEpoch, getTimestampOfLastWednesday, getPasswordHash, getPrice, calculateStatistics } from "./functions.js"
 
 /*Launching the Node.js process as:
 node process-args.js one two=three four 
@@ -70,8 +70,9 @@ if (argv[2] == 'install') {
     console.log(`Epoch=${epoch}; Progress: ${progress}%; Start date: ` + startDate.toISOString())
 } else if (argv[2] == 'price') {
     console.log(await getPrice())
-} else if (argv[2] == 'calculate') {
-
+} else if (argv[2] == 'calc') {
+    let data = await calculateStatistics(dbc, argv[3])
+    console.log(JSON.stringify(data, null, 2))
 } else {
     console.error('Error: command not find')
 }

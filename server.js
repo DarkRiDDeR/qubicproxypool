@@ -2,7 +2,7 @@ import pino from 'pino'
 import fs from 'node:fs'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
-import express from 'express'
+import express, { json } from 'express'
 import session from 'express-session'
 import MySQLSession from 'express-mysql-session'
 import slashes from 'connect-slashes'
@@ -196,8 +196,42 @@ app.get('/logout/', function(req, res){
 app.get('/panel/', checkAuth, function(req, res){
     res.render('dashboard.pug')
 })
-app.get('/panel/stats/', checkAuth, function(req, res){
-    res.render('stats.pug')
+app.get('/panel/stats/', nocache, checkAuth, function(req, res){
+    let users = [] // [login, avg hashrate, procent]
+    let workers = [] // [alias, avg hashrate, procent activity]
+    try {
+        let data  = fs.readFileSync(__dirname + '/data/calc-stats.json', 'utf8')
+        data = JSON.parse(data)
+        if (data.users) {
+            //console.log([confUsers.admins, req.session.userId])
+            if (confUsers.admins.indexOf(req.session.userId) !== -1) { //admin. Print all info
+                for (var key in data.users) {
+                    if (data.users.hasOwnProperty(key)) {
+                        const user = data.users[key]
+                        //console.log(user)
+                        users.push([
+                            user.login,
+                            user.statistics[0],
+                            user.statistics[1],
+                            user.revenue.solulions,
+                            user.revenue.potencialSols,
+                            user.revenue.potencialUSD
+                        ])
+                        user.workers.forEach(worker => {
+                            worker[0] = user.login + '.' + worker[0]
+                            workers.push(worker)
+                        })
+                    }
+                }
+                
+            } else {
+
+            }
+        }
+    } catch(err) {
+        logger.error({err})
+    }
+    res.render('stats.pug', {workers, users})
 })
 app.get('/panel/profile/', checkAuth, async function(req, res, next){
     let dbc
