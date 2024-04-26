@@ -79,7 +79,7 @@ export async function calculateStatistics(dbc, epoch) {
                 SELECT DISTINCT UNIX_TIMESTAMP(time) AS timestamp, user_id, worker_id, hashrate, is_active, last_active
                 FROM workers_statistics
                 WHERE time>= ? and time < ?
-                ORDER BY time
+                ORDER BY timestamp
             `, rowsAsArray: true
         },
         [moment.unix(start).format('YYYY-MM-D HH:mm:ss'), moment.unix(finish).format('YYYY-MM-D HH:mm:ss')]
