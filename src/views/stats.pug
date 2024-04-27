@@ -31,7 +31,7 @@ block view
               thead.fw-semibold.text-nowrap
                 tr.align-middle
                   th.bg-body-secondary Alias
-                  th.bg-body-secondary(title="Average hashrate in the epoch") Avg. hashrate
+                  th.bg-body-secondary(title="Average hashrate only activity minutes") Avg. hashrate
                   th.bg-body-secondary.text-center Activity in the epoch
                   th.bg-body-secondary.text-center Status
                   th.bg-body-secondary Start activity
@@ -95,7 +95,7 @@ block view
                 each user in users
                   tr
                     td= user[0]
-                    td #{user[2]} It/s
+                    td #{user[1]} It/s
                     td #{user[2]}%
                     td= user[3]
                     td= user[4]

@@ -162,10 +162,10 @@ export async function calculateStatistics(dbc, epoch) {
             })
         }
     }
-    console.log([
+    /*console.log([
         totalMinutes,
         workerStatsEpoch
-    ])
+    ])*/
 
     let procentSum = 0
     const [dbUsers] = await dbc.query({sql: `SELECT id, login, wallet FROM users ORDER BY login`, rowsAsArray: true})
@@ -203,14 +203,14 @@ export async function calculateStatistics(dbc, epoch) {
         const stat = workerStatsEpoch.get(item[0])
         data.users[item[1]].workers.push([
             item[2],
-            Math.round(stat[0] / totalMinutes), // avg. hshrate
+            Math.round(stat[0] / stat[1]), // avg. hshrate, only activity minutes
             Math.round(stat[1] / totalMinutes * 10000) / 100, // % activity
-            stat[2].toISOString(), // .split('.')[0], // start activity
-            stat[3].toISOString() //.split('.')[0] // last activity
+            stat[2].toISOString().split('.')[0], // start activity
+            stat[3].toISOString().split('.')[0] // last activity
         ])
         //console.log(item[2] + ' = ' + Math.round(stat[0] / totalMinutes) + ' Its / ' + (Math.round(stat[1] * 60 / totalMinutes * 100) / 100) + ' %')
     })
     //console.log(JSON.stringify(data, null, 2))
-    console.log(data.users[9].workers)
+    //console.log(data.users[9].workers)
     return data
 }
