@@ -198,34 +198,44 @@ app.get('/panel/', checkAuth, function(req, res){
 })
 app.get('/panel/stats/', nocache, checkAuth, function(req, res){
     let users = [] // [login, avg hashrate, procent]
-    let workers = [] // [alias, avg hashrate, procent activity]
+    let workers = [] // [alias, avg hashrate, procent activity, start activity, last activity]
     try {
         let data  = fs.readFileSync(__dirname + '/data/calc-stats.json', 'utf8')
         data = JSON.parse(data)
         if (data.users) {
-            //console.log([confUsers.admins, req.session.userId])
+            const fnPushUser = (user, enableMask = true, highlight = false) => {
+                if (enableMask) user.login = user.login.slice(0, 3) + '******'
+                users.push([
+                    user.login,
+                    user.statistics[0],
+                    user.statistics[1],
+                    user.revenue.solulions,
+                    user.revenue.potencialSols,
+                    user.revenue.potencialUSD,
+                    highlight
+                ])
+            }
             if (confUsers.admins.indexOf(req.session.userId) !== -1) { //admin. Print all info
                 for (var key in data.users) {
                     if (data.users.hasOwnProperty(key)) {
-                        const user = data.users[key]
-                        //console.log(user)
-                        users.push([
-                            user.login,
-                            user.statistics[0],
-                            user.statistics[1],
-                            user.revenue.solulions,
-                            user.revenue.potencialSols,
-                            user.revenue.potencialUSD
-                        ])
-                        user.workers.forEach(worker => {
-                            worker[0] = user.login + '.' + worker[0]
+                        fnPushUser(data.users[key], false)
+                        data.users[key].workers.forEach(worker => {
+                            worker[0] = data.users[key].login + '.' + worker[0]
                             workers.push(worker)
                         })
                     }
                 }
-                
-            } else {
-
+            } else if (data.users[req.session.userId]) {
+                data.users[req.session.userId].workers.forEach(worker => {
+                    worker[0] = data.users[req.session.userId].login + '.' + worker[0]
+                    workers.push(worker)
+                })
+                fnPushUser(data.users[req.session.userId], false, true)
+                for (var key in data.users) {
+                    if (data.users.hasOwnProperty(key) && key != req.session.userId) {
+                        fnPushUser(data.users[key], true)
+                    }
+                }
             }
         }
     } catch(err) {
