@@ -68,7 +68,7 @@ export async function calculateStatistics(dbc, epoch) {
     if (!epoch) {
         epoch = getCurrentEpoch()[0]
     }
-    let start = confEpoch.timestamp / 1000 + 604800 * (epoch - confEpoch.number)
+    let start = confEpoch.timestamp / 1000 + 604800 * (epoch - confEpoch.number) + 3600// старт после 1 часа эпохи
     let finish = start + 604800
     let data = {users: {}, totalPrct: 0}
 
@@ -109,12 +109,14 @@ export async function calculateStatistics(dbc, epoch) {
     let totalActiveMinutes = totalMinutes
     const userStatsEpoch = new Map() // [[userId, [hashrateSum, procentSum]...]
     const prevWorkerHashrates = new Map() // [[workerId => hashrate]...]
-    const workerStatsEpoch = new Map() // [[workerId => [hashrateSum, activeMinutes, lastActivity]...]
+    const workerStatsEpoch = new Map() // [[workerId => [hashrateSum, activeMinutes, startActivity, lastActivity]...]
     // поминутный перебор
     for(let i = start; i <= finish; i += 60) {
         if (currentItem[0] < i) {
             currentItem = hashratesForTime.shift()
         }
+        //if (!currentItem) onsole.log('empty block')
+
         let hashrateSumForMinute = 0
 
         let userStats = new Map()// [[userId , [hashrateSum, procentSum]]...] // статистика на пользователя в минуту
@@ -127,13 +129,14 @@ export async function calculateStatistics(dbc, epoch) {
             }
             prevWorkerHashrates[workerItem[1]] = workerItem[2]
             
-            let workerStatsEpochItem = [0, 0, '']
+            let workerStatsEpochItem = [0, 0, '', '']
             if (workerStatsEpoch.has(workerItem[1])) {
                 workerStatsEpochItem = workerStatsEpoch.get(workerItem[1])
             }
             workerStatsEpochItem[0] += workerItem[2] // суммарный хешрейт на воркера.
-            workerStatsEpochItem[1] += workerItem[2] ? 1 : 0 // активные минуты воркера
-            workerStatsEpochItem[2] = workerItem[4] // last activity
+            if (workerItem[2]) ++workerStatsEpochItem[1] // активные минуты воркера
+            if (!workerStatsEpochItem[2]) workerStatsEpochItem[2] = moment.unix(i) // startActivity
+            workerStatsEpochItem[3] = workerItem[4] // last activity
             hashrateSumForMinute += workerItem[2]
             workerStatsEpoch.set(workerItem[1], workerStatsEpochItem)
 
@@ -159,6 +162,10 @@ export async function calculateStatistics(dbc, epoch) {
             })
         }
     }
+    console.log([
+        totalMinutes,
+        workerStatsEpoch
+    ])
 
     let procentSum = 0
     const [dbUsers] = await dbc.query({sql: `SELECT id, login, wallet FROM users ORDER BY login`, rowsAsArray: true})
@@ -196,12 +203,14 @@ export async function calculateStatistics(dbc, epoch) {
         const stat = workerStatsEpoch.get(item[0])
         data.users[item[1]].workers.push([
             item[2],
-            Math.round(stat[0] / totalMinutes),
-            Math.round(stat[1] * 60 / totalMinutes * 100) / 100,
-            stat[2]
+            Math.round(stat[0] / totalMinutes), // avg. hshrate
+            Math.round(stat[1] / totalMinutes * 10000) / 100, // % activity
+            stat[2].toISOString(), // .split('.')[0], // start activity
+            stat[3].toISOString() //.split('.')[0] // last activity
         ])
         //console.log(item[2] + ' = ' + Math.round(stat[0] / totalMinutes) + ' Its / ' + (Math.round(stat[1] * 60 / totalMinutes * 100) / 100) + ' %')
     })
     //console.log(JSON.stringify(data, null, 2))
+    console.log(data.users[9].workers)
     return data
 }
