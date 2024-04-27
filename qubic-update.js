@@ -109,6 +109,9 @@ try {
     if (serverData.miners) {
         // savedata
         serverData = serverData.miners
+        serverData.sort((a, b) => {
+            return a.alias.toLowerCase() > b.alias.toLowerCase() ? 1 : -1 
+        })
         fs.writeFile(__dirname + '/data/receive.json', JSON.stringify(serverData), err => { 
             if(err) logger.error({err})
         })
@@ -262,7 +265,7 @@ try {
             return item
         })
         miners.sort((a, b) => {
-            return a.its < b.its;
+            return a.miner > b.miner ? 1 : -1 
         })
         fs.writeFile(__dirname + '/data/miners.json', JSON.stringify(miners), err => { 
             if(err) logger.error({err})
@@ -275,6 +278,9 @@ try {
             item.isEmpty = null
             item.miner = item.miner.slice(0, 3) + '******'
             return item
+        })
+        miners.sort((a, b) => {
+            return b.its - a.its
         })
         fs.writeFile(__dirname + '/data/miners-public.json', JSON.stringify(miners), err => { 
             if(err) logger.error({err})
