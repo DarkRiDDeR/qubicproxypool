@@ -180,12 +180,11 @@ export async function calculateStatistics(dbc, epoch) {
             data.users[item[0]] = {
                 login: item[1],
                 statistics: [ // avg. hshrate / %
-                    Math.round(userStat[0] / totalMinutes * 100) / 100,
-                    Math.round(procent * 100) / 100
+                    Math.round(userStat[0] / totalMinutes),
+                    procent
                 ],
                 workers: []
             }
-            //console.log(item[1] + ` = ${Math.round(avgHashrate * 100) / 100} Its / ${Math.round(procent * 100) / 100} %`)
         }
     })
     data.totalPrct = procentSum
@@ -201,6 +200,9 @@ export async function calculateStatistics(dbc, epoch) {
     //console.log('Workers (avg. hshrate / % activity):')
     dbWorkers.forEach((item) => {
         const stat = workerStatsEpoch.get(item[0])
+        if (!stat[1]) {
+            stat[1] = 1
+        }
         data.users[item[1]].workers.push([
             item[2],
             Math.round(stat[0] / stat[1]), // avg. hshrate, only activity minutes

@@ -58,6 +58,7 @@ try {
                 potencialSols: Math.round(potencialSols * 100) / 100,
                 potencialUSD: Math.round(potencialSols * solPrice * 100 * 0.84) / 100, // commission 16%
             }
+            data.users[key].statistics[1] = Math.round(data.users[key].statistics[1] * 100) / 100
         }
     }
 
