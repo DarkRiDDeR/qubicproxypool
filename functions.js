@@ -134,7 +134,7 @@ export async function calculateStatistics(dbc, epoch) {
                 workerStatsEpochItem = workerStatsEpoch.get(workerItem[1])
             }
             workerStatsEpochItem[0] += workerItem[2] // суммарный хешрейт на воркера.
-            if (workerItem[2]) ++workerStatsEpochItem[1] // активные минуты воркера
+            if (workerItem[3]) ++workerStatsEpochItem[1] // активные минуты воркера
             if (!workerStatsEpochItem[2]) workerStatsEpochItem[2] = moment.unix(i) // startActivity
             workerStatsEpochItem[3] = workerItem[4] // last activity
             hashrateSumForMinute += workerItem[2]
