@@ -2,8 +2,9 @@ import pino from 'pino'
 import fs from 'node:fs'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
+import moment from 'moment'
 import { confEpoch, confLogger, confQubic } from "./config.js"
-import { dbConnect, getPrice } from "./functions.js"
+import { dbConnect, getPrice, getEpochStartTimestamp } from "./functions.js"
 
 process.env.TZ = "UTC"
 const __filename = fileURLToPath(import.meta.url)
@@ -371,7 +372,14 @@ try {
         // insert solutions
         if (currentSols > 0) {
             try {
-                await dbc.query('INSERT INTO solutions(number) VALUES (?);', [currentSols])
+                const [rowsSolutions] = await dbc.query(
+                    {sql: 'SELECT number FROM `solutions` WHERE time > ? ORDER BY `id` DESC LIMIT 1', rowsAsArray: true},
+                    [moment.unix(getEpochStartTimestamp()).format('YYYY-MM-D HH:mm:ss')]
+                )
+                console.log(rowsSolutions)
+                if (rowsSolutions.length && currentSols > rowsSolutions[0][0]) {
+                    await dbc.query('INSERT INTO solutions(number) VALUES (?);', [currentSols])
+                }
             } catch (err) {
                 logger.warn({err})
             }

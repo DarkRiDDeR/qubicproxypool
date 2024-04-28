@@ -32,6 +32,18 @@ export function getCurrentEpoch() {
 }
 
 /**
+ * 
+ * @param {*} epoch 
+ * @returns seconds
+ */
+export function  getEpochStartTimestamp(epoch) {
+    if (!epoch) {
+        epoch = getCurrentEpoch()[0]
+    }
+    return confEpoch.timestamp / 1000 + 604800 * (epoch - confEpoch.number)
+}
+
+/**
  * @returns true or error message 
  */
 export function dbConnect(){
