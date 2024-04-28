@@ -55,7 +55,7 @@ try {
             await new Promise(resolve => setTimeout(resolve, 5000))
             twoFactorCode = twoFactor.generateToken(confQubic.token2fa)
         }
-        let postData = JSON.stringify({ 'userName': confQubic.login, 'password': confQubic.password, 'twoFactorCode': twoFactorCode })
+        let postData = JSON.stringify({ 'userName': confQubic.login, 'password': confQubic.password, 'twoFactorCode': twoFactorCode.token })
         response  = await fetch('https://api.qubic.li/Auth/Login', {
             method: 'POST',
             body: postData,
