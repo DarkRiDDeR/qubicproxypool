@@ -52,7 +52,7 @@ try {
          */
         let twoFactorCode = ''
         if (confQubic.token2fa) {
-            await sleep(5000)
+            await new Promise(resolve => setTimeout(resolve, 5000))
             twoFactorCode = twoFactor.generateToken(confQubic.token2fa)
         }
         let postData = JSON.stringify({ 'userName': confQubic.login, 'password': confQubic.password, 'twoFactorCode': twoFactorCode })
@@ -397,7 +397,7 @@ try {
     }
 } catch (err) {
     logger.error({err})
-    if (dbc.end) {
+    if (dbc && dbc.end) {
         dbc.end()
     }
 }
