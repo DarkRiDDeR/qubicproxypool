@@ -251,14 +251,6 @@ try {
             await dbc.query(sql)
         }
     
-        try {
-            dbc.end()
-            dbc = null
-        } catch(err) { 
-            log.warning('DB end error: ' + err.message)
-        }
-
-
         // save miner stats
         miners = Array.from(miners, ([name, item]) => {
             item.miner = name
@@ -337,6 +329,7 @@ try {
             serverData = ''
         }
 
+        const currentSols = parseInt(responsePerformance.foundSolutions)
         if (serverData) {
             const now = new Date().getTime()
             const millisecondsInWweek = 604800000
@@ -364,7 +357,7 @@ try {
                     incomePerOneIts,
                     curSolPrice,
                     total: {
-                        solutions: responsePerformance.foundSolutions, //totalSolutions,
+                        solutions: currentSols, //totalSolutions,
                         hashrate: totalHashrate,
                         activeWorkers: totalActiveWorkers
                     }
@@ -374,12 +367,24 @@ try {
                 }
             )
         }
+
+        // insert solutions
+        if (currentSols > 0) {
+            try {
+                await dbc.query('INSERT INTO solutions(number) VALUES (?);', [currentSols])
+            } catch (err) {
+                logger.warn({err})
+            }
+        }
+        
+        dbc.end()
+        dbc = null
     } else {
         logger.warning('Error: not miners data from server')
     }
 } catch (err) {
     logger.error({err})
-    if (dbc) {
+    if (dbc.end) {
         dbc.end()
     }
 }
