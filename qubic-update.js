@@ -3,6 +3,7 @@ import fs from 'node:fs'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 import moment from 'moment'
+import twoFactor from 'node-2fa'
 import { confEpoch, confLogger, confQubic } from "./config.js"
 import { dbConnect, getPrice, getEpochStartTimestamp } from "./functions.js"
 
@@ -49,7 +50,12 @@ try {
             }
             }
          */
-        let postData = JSON.stringify({ 'userName': confQubic.login, 'password': confQubic.password, 'twoFactorCode': '' })
+        let twoFactorCode = ''
+        if (confQubic.token2fa) {
+            await sleep(5000)
+            twoFactorCode = twoFactor.generateToken(confQubic.token2fa)
+        }
+        let postData = JSON.stringify({ 'userName': confQubic.login, 'password': confQubic.password, 'twoFactorCode': twoFactorCode })
         response  = await fetch('https://api.qubic.li/Auth/Login', {
             method: 'POST',
             body: postData,
@@ -376,7 +382,6 @@ try {
                     {sql: 'SELECT number FROM `solutions` WHERE time > ? ORDER BY `id` DESC LIMIT 1', rowsAsArray: true},
                     [moment.unix(getEpochStartTimestamp()).format('YYYY-MM-D HH:mm:ss')]
                 )
-                console.log(rowsSolutions)
                 if (rowsSolutions.length && currentSols > rowsSolutions[0][0]) {
                     await dbc.query('INSERT INTO solutions(number) VALUES (?);', [currentSols])
                 }
