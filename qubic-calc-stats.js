@@ -35,7 +35,7 @@ try {
     if (data.netSolsPerHour) netSolsPerHour = data.netSolsPerHour
     if (data.netHashrate) netHashrate = data.netHashrate
 } catch (err) {
-    logger.warning({err})
+    logger.warn({err})
 }
 
 try {
@@ -68,6 +68,6 @@ try {
 } catch (err) {
     logger.error({err})
 }
-if (dbc.end) {
+if (dbc && dbc.end) {
     dbc.end()
 }

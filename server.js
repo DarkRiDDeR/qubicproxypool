@@ -81,9 +81,6 @@ function nocache(req, res, next) {
     next()
 }
 
-
-
-
 app.get('/', function(req, res, next) {
     res.render('index.pug', { url: req.url })
     //next(new Error('Example error message'))
@@ -185,7 +182,7 @@ app.post('/register/', nocache, async function(req, res){
             if (dbc) dbc.end()
         }
     }
-    res.json({success: 0, message: "Еhere are empty fields!"})
+    res.json({success: 0, message: "There are empty fields!"})
 })
 app.get('/logout/', function(req, res){
     req.session.destroy()
@@ -300,6 +297,11 @@ app.get('/api/miners/', nocache, (req, res) => {
     } else {
         res.sendFile(__dirname + '/data/miners-public.json')
     }
+})
+app.get('/api/solutions/', nocache, (req, res) => {
+    res.setHeader('x-no-compression', '1')
+    res.header("Content-Type",'application/json')
+    res.sendFile(__dirname + '/data/solutions.json')
 })
 
 

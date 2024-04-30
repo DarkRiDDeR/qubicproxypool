@@ -81,7 +81,7 @@ export async function calculateStatistics(dbc, epoch) {
         epoch = getCurrentEpoch()[0]
     }
     let start = confEpoch.timestamp / 1000 + 604800 * (epoch - confEpoch.number) + 3600// старт после 1 часа эпохи
-    let finish = start + 604800
+    let finish = start + 604800 - 3600
     let data = {users: {}, totalPrct: 0}
 
     const [usersRows] = await dbc.query({sql: 'SELECT id, login FROM users', rowsAsArray: true})
@@ -226,5 +226,47 @@ export async function calculateStatistics(dbc, epoch) {
     })
     //console.log(JSON.stringify(data, null, 2))
     //console.log(data.users[9].workers)
+    return data
+}
+
+/**
+ * 
+ * @param {*} dbc 
+ * @param {*} interval - seconds
+ * @param {*} epoch 
+ * @returns object {time => sols}
+ */
+export async function getSolsStatistics(dbc, interval = 3600, epoch) {
+    if (!epoch) {
+        epoch = getCurrentEpoch()[0]
+    }
+    let start = confEpoch.timestamp / 1000 + 604800 * (epoch - confEpoch.number)
+    let finish = start + 604800
+
+    const [rows] = await dbc.query(
+        {sql: `SELECT DISTINCT UNIX_TIMESTAMP(time) AS timestamp, number FROM solutions WHERE time>= ? and time < ? ORDER BY timestamp`, rowsAsArray: true},
+        [moment.unix(start + 3600).format('YYYY-MM-D HH:mm:ss'), moment.unix(finish).format('YYYY-MM-D HH:mm:ss')] // старт после 1 часа эпохи
+    )
+
+    const data = new Map() // [time, sols]
+    for(let i = start; i <= finish; i += interval) {
+        data.set(i, 0)
+    }
+
+    if (rows.length) {
+        let prevRow = rows[0] //[time, sols]
+        data.set(prevRow[0] - (prevRow[0] - start) % interval, prevRow[1])
+
+        rows.forEach(row => {
+            if(row[1] > prevRow[1]) {
+                const key = row[0] - (row[0] - start) % interval
+                data.set(
+                    key,
+                    data.get(key) + row[1] - prevRow[1]
+                )
+                prevRow = row
+            }
+        })
+    }
     return data
 }

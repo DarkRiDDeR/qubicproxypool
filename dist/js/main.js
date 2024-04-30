@@ -7,6 +7,59 @@
  * --------------------------------------------------------------------------
  */
 
+let totalSolutions = 0
+function initSolsChart() {
+  const elSolsChart = document.getElementById('canvasSolsChart')
+    if (elSolsChart) {
+      return new Chart(document.getElementById('canvasSolsChart'), {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [{
+            cubicInterpolationMode: 'monotone',
+            backgroundColor: 'rgba(237,173,33,0.2)',
+            borderColor: 'rgba(237,173,33,1)',
+            pointBackgroundColor: 'rgba(237,173,33,1)',
+            pointBorderColor: '#fff',
+            fill: true,
+            pointStyle: 'circle',
+            pointRadius: 3,
+            pointHoverRadius: 5,
+            data: [],
+            spanGaps: true
+          }]
+        },
+        options: {
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          responsive: true
+        }
+      })
+    }
+  return null
+}
+
+async function updateSolsChart (chart) {
+  const labels = []
+  const values = []
+  let res = await fetch('/api/solutions/')
+  res = Object.entries(await res.json())
+  if (res) {
+    for(let [t, v] of res) {
+      const d = new Date(t*1000) 
+      labels.push(d.toLocaleString('en-us',{timeZone:'UTC',weekday:'short',hourCycle: 'h24',hour:'2-digit',minute:'2-digit'}))
+      if (!v) v = null
+      values.push(v)
+    }
+    chart.data.labels = labels
+    chart.data.datasets[0].data = values
+    chart.update()
+  }    
+}
+
 const initialEpoch = [103, 1712145600000] // [number, timestamp in milliseconds]
 const elEpochProgress = document.getElementById('epoch-progress')
 if (elEpochProgress) {
@@ -40,8 +93,8 @@ for (const form of Array.prototype.slice.call(elFormsAuth)) {
       } else {
         msgError = result.message
       }
-    } catch (error) {
-      msgError = 'Error processing data from the server'
+    } catch (err) {
+      console.error(err)
     }
     if (msgError) {
       form.querySelector('.invalid-feedback').textContent = msgError
@@ -90,8 +143,8 @@ for (const form of Array.prototype.slice.call(elFormsReg)) {
           input.classList.remove('is-invalid')
         }
       }
-    } catch (error) {
-      msgError = 'Error processing data from the server'
+    } catch (err) {
+      console.error(err)
     }
   })(e))
 }
@@ -100,6 +153,7 @@ for (const form of Array.prototype.slice.call(elFormsReg)) {
 
 const elMainInfo = document.querySelector('#main-info')
 if (elMainInfo) {
+  let solsChart = initSolsChart()
   let incomePerOneIts = netSolsPerHour = netHashrate = price = 0
   const elActiveWorkers = elMainInfo.querySelector('.info-active-workers .fs-4.fw-semibold span')
   elHashrate = elMainInfo.querySelector('.info-hashrate .fs-4.fw-semibold span')
@@ -124,6 +178,12 @@ if (elMainInfo) {
         if (elNetwork) elNetwork.textContent = netHashrate
         if (elSolPrice) elSolPrice.textContent = Math.round(res.curSolPrice * 100) / 100
         if (elAge) elAge.textContent = Math.floor((res.updateTime - new Date().getTime()) / 1000)
+
+        // chart
+        if (solsChart && totalSolutions != res.total.solutions) {
+          updateSolsChart(solsChart)
+          totalSolutions = res.total.solutions // global
+        }
       }
     }
     tick().then(() => {
@@ -134,8 +194,8 @@ if (elMainInfo) {
       }
     })
     setInterval(tick, 60000)
-  } catch (error) {
-    msgError = 'Error processing data from the server'
+  } catch (err) {
+    console.error(err)
   }
 
   const formProfit = document.querySelector('#profitCalculator')
@@ -201,8 +261,8 @@ if (elTableMiners) {
     }
     tick()
     setInterval(tick, 60000)
-  } catch (error) {
-    msgError = 'Error processing data from the server'
+  } catch (err) {
+    console.error(err)
   }
 }
 
@@ -228,8 +288,8 @@ if (elPanelWorkers) {
     }
     tick()
     setInterval(tick, 60000)
-  } catch (error) {
-    msgError = 'Error processing data from the server'
+  } catch (err) {
+    console.error(err)
   }
 }
 //# sourceMappingURL=main.js.map

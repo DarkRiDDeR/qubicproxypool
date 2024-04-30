@@ -7,6 +7,7 @@ export const confLogger = {
 export const confQubic = {
     login: '',
     password: '',
+    token2fa: '',
     //specificDataServer: 'http://stanvps.ddns.net:8100/receive.txt'
 }
 export const confUsers = {

@@ -1,12 +1,14 @@
 extends ../_layout/public.pug
 
 block styles
+  link(rel='stylesheet' href='/vendors/@coreui/chartjs/css/coreui-chartjs.css')
 
 block scripts
-  if !starter
-    // Plugins and scripts required by this view
-    script(src='/vendors/@coreui/utils/js/index.js')
-    script(src='/js/main.js')
+  //if !starter
+  // Plugins and scripts required by this view
+  script(src='/vendors/@coreui/utils/js/index.js')
+  script(src='/vendors/chart.js/js/chart.umd.js')
+  script(src='/js/main.js')
 
 block view
   .row
@@ -112,8 +114,8 @@ block view
             a(href="https://app.qubic.li" target="_blank") https://app.qubic.li
             |. At the end of the epoch the received funds are divided depending on the contribution of each user through the PPSTI (Payment per share for time intervals) reward system. This service will be especially useful for miners with small capacities, who will be rewarded depending on their hash rate, not on the number of solutions found.
           include ../_partials/profitcalc.pug
-
-      .mb-4
+ 
+      .card.mb-4           
         .table-responsive
           table.table.table-striped.border.mb-0(id="table-miners")
             thead.fw-semibold.text-nowrap
@@ -133,47 +135,14 @@ block view
                 td 15
                 td 921It/s
                 td 3
-              tr.align-middle
-                td s7*****
-                td 15
-                td 921It/s
-                td 3
-              tr.align-middle
-                td Us*****
-                td 15
-                td 921 It/s
-                td 3
-              tr.align-middle
-                td tt*****
-                td 15
-                td 921 It/s
-                td 3
-              tr.align-middle
-                td iu*****
-                td 15
-                td 921 It/s
-                td 3
-              tr.align-middle
-                td tr******
-                td 15
-                td 921 It/s
-                td 3
-              tr.align-middle
-                td po******
-                td 15
-                td 921 It/s
-                td 3
-              tr.align-middle
-                td re******
-                td 15
-                td 921 It/s
-                td 3
-              tr.align-middle
-                td io******
-                td 15
-                td 921 It/s
-                td 3
         // /.table-responsive
+
+      .card.mb-4
+        .card-header
+          H3 Solutions
+        .card-body.overflow-scroll
+          .c-chart-wrapper(style="height:50vh;max-height:300px;width:100%;min-width:800px")
+            canvas#canvasSolsChart(style="height:100%;width:100%")
 
       .card.mb-4
         .card-body

@@ -5,7 +5,7 @@ import { dirname } from 'path'
 import moment from 'moment'
 import twoFactor from 'node-2fa'
 import { confEpoch, confLogger, confQubic } from "./config.js"
-import { dbConnect, getPrice, getEpochStartTimestamp } from "./functions.js"
+import { dbConnect, getPrice, getEpochStartTimestamp, getSolsStatistics } from "./functions.js"
 
 process.env.TZ = "UTC"
 const __filename = fileURLToPath(import.meta.url)
@@ -388,6 +388,16 @@ try {
             } catch (err) {
                 logger.warn({err})
             }
+        }
+
+        // solutions
+        try {
+            let dataSols = await getSolsStatistics(dbc, 7200)
+            fs.writeFile(__dirname + '/data/solutions.json', JSON.stringify(Object.fromEntries(dataSols)), err => { 
+                if(err) throw err
+            })
+        } catch (err) {
+            logger.warn({err})
         }
         
         dbc.end()
