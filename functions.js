@@ -255,11 +255,11 @@ export async function getSolsStatistics(dbc, interval = 3600, epoch) {
 
     if (rows.length) {
         let prevRow = rows[0] //[time, sols]
-        data.set(prevRow[0] - (prevRow[0] - start) % interval, prevRow[1])
+        data.set(prevRow[0] - (prevRow[0] - start) % interval, prevRow[1]) + interval
 
         rows.forEach(row => {
             if(row[1] > prevRow[1]) {
-                const key = row[0] - (row[0] - start) % interval
+                const key = row[0] - (row[0] - start) % interval + interval
                 data.set(
                     key,
                     data.get(key) + row[1] - prevRow[1]

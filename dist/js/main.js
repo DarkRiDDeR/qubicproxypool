@@ -51,7 +51,7 @@ async function updateSolsChart (chart) {
     for(let [t, v] of res) {
       const d = new Date(t*1000) 
       labels.push(d.toLocaleString('en-us',{timeZone:'UTC',weekday:'short',hourCycle: 'h24',hour:'2-digit',minute:'2-digit'}))
-      if (!v) v = null
+      if (values.length && !v) v = null
       values.push(v)
     }
     chart.data.labels = labels
