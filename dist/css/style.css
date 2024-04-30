@@ -14044,4 +14044,12 @@ textarea.form-control-lg {
 [data-coreui-theme="light"] .sidebar-brand-public-dark {
   display: block;
 }
+
+.sols-chart .c-chart-wrapper {
+  height:50vh;
+  max-height:300px;
+  min-height:150px;
+  width:100%;
+  min-width:800px
+}
 /*# sourceMappingURL=style.css.map */

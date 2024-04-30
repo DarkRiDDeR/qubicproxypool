@@ -3,9 +3,10 @@ extends ../_layout/default.pug
 block styles
 
 block scripts
-  if !starter
-    // Plugins and scripts required by this view
-    script(src='/js/main.js')
+  // Plugins and scripts required by this view
+  script(src='/vendors/@coreui/utils/js/index.js')
+  script(src='/vendors/chart.js/js/chart.umd.js')
+  script(src='/js/main.js')
 
 
 block breadcrumb
@@ -167,97 +168,6 @@ block view
                       |	23.03.2024 04:02
                     td
                       <span class="badge me-1 bg-success">True</span>
-                  tr.align-middle
-                    td
-                      | User1.w2
-                    td
-                      | 1.8.10.0
-                    td
-                      | 55 It/s
-                    td
-                      | 5
-                    td
-                      |	23.03.2024 04:02
-                    td
-                      <span class="badge me-1 bg-success">True</span>
-                  tr.align-middle
-                    td
-                      | User2.w3
-                    td
-                      | 1.8.10.0
-                    td
-                      | 55 It/s
-                    td
-                      | 5
-                    td
-                      |	23.03.2024 04:02
-                    td
-                      <span class="badge me-1 bg-success">True</span>
-                  tr.align-middle
-                    td
-                      | User2.w4
-                    td
-                      | 1.8.10.0
-                    td
-                      | 55 It/s
-                    td
-                      | 5
-                    td
-                      |	23.03.2024 04:02
-                    td
-                      <span class="badge me-1 bg-success">True</span>
-                  tr.align-middle
-                    td
-                      | User2.w5
-                    td
-                      | 1.8.10.0
-                    td
-                      | 55 It/s
-                    td
-                      | 5
-                    td
-                      |	23.03.2024 04:02
-                    td
-                      <span class="badge me-1 bg-success">True</span>
-                  tr.align-middle
-                    td
-                      | User2.w6
-                    td
-                      | 1.8.10.0
-                    td.bg-danger
-                      | 55 It/s
-                    td
-                      | 5
-                    td
-                      |	23.03.2024 04:02
-                    td
-                      <span class="badge me-1 bg-danger">False</span>
-                  tr.align-middle.bg-warning
-                    td
-                      | User2.w7
-                    td
-                      | 1.8.10.0
-                    td
-                      | 55 It/s
-                    td
-                      | 5
-                    td
-                      |	23.03.2024 04:02
-                    td
-                      <span class="badge me-1 bg-success">True</span>
-                  tr.align-middle
-                    td
-                      | User2.w8
-                    td
-                      | 1.8.10.0
-                    td.text-bg-warning
-                      | 0 It/s
-                    td
-                      | 5
-                    td
-                      |	23.03.2024 04:02
-                    td
-                      <span class="badge me-1 bg-success">True</span>
         
           //--.col-12.col-lg-8.col-xl-8.col-xxl-8
           h2 Miners
@@ -289,63 +199,17 @@ block view
                     td 921 It/s
                     td 3
                     td 0
-                  tr.align-middle
-                    td Us******
-                    td 921 It/s
-                    td 15
-                    td 3
-                    td 0
-                  tr.align-middle
-                    td fd******
-                    td 15
-                    td 921	It/s
-                    td 3
-                    td 0
-                  tr.align-middle
-                    td re******
-                    td 15
-                    td.text-bg-warning 921	It/s
-                    td 3
-                    td 0
-                  tr.align-middle
-                    td oi******
-                    td 15
-                    td 921	It/s
-                    td 3
-                    td 0
-                  tr.align-middle
-                    td po******
-                    td 15
-                    td 921	It/s
-                    td 3
-                    td.text-bg-danger 1
-                  tr.align-middle
-                    td Us******
-                    td 15
-                    td 921	It/s
-                    td 3
-                    td 0
-                  tr.align-middle
-                    td Us******
-                    td 15
-                    td 921	It/s
-                    td 3
-                    td.text-bg-danger 1
-                  tr.align-middle
-                    td Us******
-                    td 15
-                    td.text-bg-warning 921	It/s
-                    td 3
-                    td.text-bg-danger 1
-                  tr.align-middle
-                    td Us******
-                    td 15
-                    td 921	It/s
-                    td 3
-                    td 0
+              
           // /.col
+        
         // /.row.g-4
 
+      .card.mb-4.sols-chart
+        .card-header
+          H3 Solutions
+        .card-body.overflow-scroll
+          .c-chart-wrapper
+            canvas#canvasSolsChart(style="height:100%;width:100%")
         
     // /.col
   // /.row
