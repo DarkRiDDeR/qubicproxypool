@@ -26,7 +26,8 @@ export const confEpoch = {
 }
 export const confServer = {
     port: 3000,
-    sessionSecretKey: 'qubicproxypool'
+    sessionSecretKey: 'qubicproxypool',
+    inviteCode: 148051
 }
 
 export const confDb = {

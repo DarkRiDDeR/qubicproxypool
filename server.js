@@ -130,7 +130,7 @@ app.post('/register/', nocache, async function(req, res){
     if(req.body.login && req.body.email && req.body.password && req.body.password2 && req.body.wallet && req.body.code){
         let dbc
         try {
-            if (req.body.code != '558744') {
+            if (req.body.code != confServer.inviteCode) {
                 res.json({success: 0, message: "Invalid invitation code", fieldsError: ['code']})
                 return
             }
