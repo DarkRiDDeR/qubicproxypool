@@ -174,8 +174,8 @@ if (elMainInfo) {
         if (elActiveWorkers) elActiveWorkers.textContent = res.total.activeWorkers
         if (elHashrate) elHashrate.textContent = res.total.hashrate
         if (elSol) elSol.textContent = res.total.solutions
-        if (elPrice) elPrice.textContent = price
-        if (elNetwork) elNetwork.textContent = netHashrate
+        if (elPrice) elPrice.textContent = Math.round(price * 100000000) / 100
+        if (elNetwork) elNetwork.textContent = Math.round(netHashrate / 1000000)
         if (elSolPrice) elSolPrice.textContent = Math.round(res.curSolPrice * 100) / 100
         if (elAge) elAge.textContent = Math.floor((res.updateTime - new Date().getTime()) / 1000)
 

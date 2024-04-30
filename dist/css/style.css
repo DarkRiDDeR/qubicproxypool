@@ -14009,17 +14009,31 @@ textarea.form-control-lg {
   min-height: 3rem;
 }
 
-[data-coreui-theme=dark] body {
-  background-color: var(--cui-dark-bg-subtle);
+.sols-chart .c-chart-wrapper {
+  height:50vh;
+  max-height:300px;
+  min-height:150px;
+  width:100%;
+  min-width:800px
 }
-[data-coreui-theme=dark] .footer {
-  --cui-footer-bg: var(--cui-body-bg);
-}
-
 .exchanges-icons img {
   width: 400px;
   max-width: 100%;
   margin: 1em 0 2em;
+}
+#epochProgress {
+  height: 3rem;
+  font-size: 1.3em;
+  background-color: rgb(50, 58, 73);
+  font-weight: bold;
+}
+#epochProgress .progress-bar > span {
+  margin: 0.5em;
+}
+@media (min-width: 576px) {
+  #epochProgress {
+    font-size: 1.6em;
+  }
 }
 
 .footer {
@@ -14032,6 +14046,12 @@ textarea.form-control-lg {
   transform: translate(-50%, 0);
 }
 
+[data-coreui-theme=dark] body {
+  background-color: var(--cui-dark-bg-subtle);
+}
+[data-coreui-theme=dark] .footer {
+  --cui-footer-bg: var(--cui-body-bg);
+}
 [data-coreui-theme="dark"] .sidebar-brand-public-light {
   display: block;
 }
@@ -14045,11 +14065,4 @@ textarea.form-control-lg {
   display: block;
 }
 
-.sols-chart .c-chart-wrapper {
-  height:50vh;
-  max-height:300px;
-  min-height:150px;
-  width:100%;
-  min-width:800px
-}
 /*# sourceMappingURL=style.css.map */
