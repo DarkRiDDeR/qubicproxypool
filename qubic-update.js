@@ -172,7 +172,7 @@ try {
 
             const userWorker = user + '.' + worker
             const its = parseInt(item.currentIts) 
-            const sol = parseInt(item.solutionsFound)
+            let sol = parseInt(item.solutionsFound)
             const lastActive = item.lastActive
             const isActive = item.isActive ? 1 : 0
             const version = item.version.versionString
