@@ -40,6 +40,11 @@ if (argv[2] == 'install') {
     } catch (err) {
         console.log(err)
     }
+} else if (argv[2] == 'users') {
+    const [rows] = await dbc.query({sql: 'SELECT login, email, wallet FROM users', rowsAsArray: true})
+    rows.forEach(item => {
+        console.log(item[0] + '   ' + item[1] + '   ' + item[2])
+    })
 } else if (argv[2] == 'user-add') {
     if (argv.length != 7) {
         console.error('Error: add user command "add-user <login> <email> <password> <wallet>"')

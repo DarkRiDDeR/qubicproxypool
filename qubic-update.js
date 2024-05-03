@@ -375,30 +375,25 @@ try {
             )
         }
 
-        // insert solutions
-        if (currentSols > 0) {
-            try {
-                const [rowsSolutions] = await dbc.query(
-                    {sql: 'SELECT number FROM `solutions` WHERE time > ? ORDER BY `id` DESC LIMIT 1', rowsAsArray: true},
-                    [moment.unix(getEpochStartTimestamp()).format('YYYY-MM-D HH:mm:ss')]
-                )
-                if (rowsSolutions.length == 0 || currentSols > rowsSolutions[0][0]) {
-                    await dbc.query('INSERT INTO solutions(number) VALUES (?);', [currentSols])
-                }
-            } catch (err) {
-                logger.warn({err})
-            }
-        }
-
         // solutions
+        //if (currentSols > 0) {
         try {
-            let dataSols = await getSolsStatistics(dbc, 7200)
-            fs.writeFile(__dirname + '/data/solutions.json', JSON.stringify(Object.fromEntries(dataSols)), err => { 
-                if(err) throw err
-            })
+            const [rowsSolutions] = await dbc.query(
+                {sql: 'SELECT number FROM `solutions` WHERE time > ? ORDER BY `id` DESC LIMIT 1', rowsAsArray: true},
+                [moment.unix(getEpochStartTimestamp()).format('YYYY-MM-D HH:mm:ss')]
+            )
+            if (rowsSolutions.length == 0 || currentSols > rowsSolutions[0][0]) {
+                await dbc.query('INSERT INTO solutions(number) VALUES (?);', [currentSols])
+                
+                let dataSols = await getSolsStatistics(dbc, 7200)
+                fs.writeFile(__dirname + '/data/solutions.json', JSON.stringify(Object.fromEntries(dataSols)), err => { 
+                    if(err) throw err
+                })
+            }
         } catch (err) {
             logger.warn({err})
         }
+        //}
         
         dbc.end()
         dbc = null
