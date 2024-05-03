@@ -74,7 +74,7 @@ try {
         if (!serverToken) {
             logger.error(result, 'Error token')
         } else {
-
+            
             /*
             miners: [
                 {
@@ -288,21 +288,11 @@ try {
         // qubic price
         let price = 0
         try {
-            price = await getPrice(5000)
-            fs.writeFile(__dirname + '/data/price.txt', price.toString(), err => { 
-                if(err) throw err
-            })
-        } catch(err) {
-            logger.warn(err, 'price processing error')
-        }
-        if (!price) {
-            try {
-                if (fs.existsSync(__dirname + '/data/price.txt')) {
-                    price = parseFloat(fs.readFileSync(__dirname + '/data/price.txt', 'utf-8'))
-                }
-            } catch(err) {
-                logger.warn(err, 'price processing 2 error')
+            if (fs.existsSync(__dirname + '/data/price.txt')) {
+                price = parseFloat(fs.readFileSync(__dirname + '/data/price.txt', 'utf-8'))
             }
+        } catch(err) {
+            logger.warn(err, 'price processing 2 error')
         }
         
 
