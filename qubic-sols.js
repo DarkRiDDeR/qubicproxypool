@@ -5,14 +5,14 @@ import { dirname } from 'path'
 import mysql from 'mysql2/promise'
 import moment from 'moment'
 import { confLogger, confDb, confEpoch } from "./config.js"
-import { getCurrentEpoch, getSolsStatistics } from "./functions.js"
+import { getCurrentEpoch, getSolsStatistics, getPrice } from "./functions.js"
 
 process.env.TZ = "UTC"
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 const logger = pino(pino.destination({
-    //dest: './logs/qubic-sols.log',
+    dest: './logs/qubic-sols.log',
     level: confLogger.level
 }))
 let dbc
