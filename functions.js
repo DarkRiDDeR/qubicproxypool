@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto'
 import mysql from 'mysql2/promise'
 import { CoinGeckoClient } from 'coingecko-api-v3'
-import { confDb, confEpoch} from './config.js'
+import { confDb, confEpoch, confQubic} from './config.js'
 import moment from 'moment'
 import { match } from 'node:assert'
 
@@ -74,6 +74,25 @@ export async function getPrice(timeout = 10000) {
         return res['qubic-network']['usd']
     }
     return null
+}
+
+/**
+ * 
+ * @param {*} token 
+ * @param {*} workerId 
+ * @param {*} timeout = 5000
+ * @returns 
+ */
+export function qubicClearWorker (token, workerId, timeout = 5000) {
+    return fetch('https://api.qubic.li/My/MinerControl/Clear/' + workerId, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+            'User-Agent': confQubic.userAgent
+        },
+        timeout: timeout,
+    })
 }
 
 export async function calculateStatistics(dbc, epoch) {

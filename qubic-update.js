@@ -5,7 +5,7 @@ import { dirname } from 'path'
 import moment from 'moment'
 import twoFactor from 'node-2fa'
 import { confEpoch, confLogger, confQubic } from "./config.js"
-import { dbConnect, getPrice, getEpochStartTimestamp, getSolsStatistics } from "./functions.js"
+import { dbConnect, getEpochStartTimestamp, getSolsStatistics, qubicClearWorker } from "./functions.js"
 
 process.env.TZ = "UTC"
 const __filename = fileURLToPath(import.meta.url)
@@ -17,19 +17,19 @@ const logger = pino(pino.destination({
     level: confLogger.level,
 }))
 
-const userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0'
-const timeout = 30000
+const timeout = 10000
 let serverData = ''
 let serverToken, serverUserId
 let response, result
 let dbc
+let workersIdForCleaning = []
 
 
 try {
     if (confQubic.specificDataServer) {
         response  = await fetch(confQubic.specificDataServer, {
             headers: {
-                'User-Agent': userAgent
+                'User-Agent': confQubic.userAgent
             },
             timeout: timeout
         })
@@ -62,7 +62,7 @@ try {
             headers: {
                 'Content-Type': 'application/json',
                 'Content-Length': Buffer.byteLength(postData),
-                'User-Agent': userAgent
+                'User-Agent': confQubic.userAgent
             },
             timeout: timeout
         })
@@ -74,7 +74,7 @@ try {
         if (!serverToken) {
             logger.error(result, 'Error token')
         } else {
-            
+
             /*
             miners: [
                 {
@@ -104,7 +104,7 @@ try {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${serverToken}`,
-                    'User-Agent': userAgent
+                    'User-Agent': confQubic.userAgent
                 },
                 timeout: timeout,
             })
@@ -154,6 +154,19 @@ try {
         //let poolUsers = new Set() 
         let poolWorkers = new Map() // [user.worker, [user, worker]]
         for(let item of serverData) {
+            const lastActive = item.lastActive
+            const isActive = item.isActive ? 1 : 0
+            // clean
+
+            try {
+                if (!isActive && (Date.now() - new Date(lastActive).getTime()) > confQubic.cleaningAfterInactivity) {
+                    workersIdForCleaning.push(item.id)
+                }
+            } catch (err) {
+                logger.warn({err})
+            }
+
+
             let alias = item.alias.trim().toLowerCase().split(/(\.|___)/, 3)
             let worker = alias[0].trim()
             let user = 'none' // no detect user
@@ -173,8 +186,6 @@ try {
             const userWorker = user + '.' + worker
             const its = parseInt(item.currentIts) 
             let sol = parseInt(item.solutionsFound)
-            const lastActive = item.lastActive
-            const isActive = item.isActive ? 1 : 0
             const version = item.version.versionString
 
             //poolUsers.add(user)
@@ -305,7 +316,7 @@ try {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${serverToken}`,
-                    'User-Agent': userAgent
+                    'User-Agent': confQubic.userAgent
                 },
                 timeout: timeout,
             })
@@ -316,7 +327,7 @@ try {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${serverToken}`,
-                    'User-Agent': userAgent
+                    'User-Agent': confQubic.userAgent
                 },
                 timeout: 10000,
             })
@@ -384,11 +395,20 @@ try {
             logger.warn({err})
         }
         //}
+    
+        // clean workers
+        try {
+            for(let id of workersIdForCleaning) {
+                await qubicClearWorker(serverToken, id)
+            }
+        } catch (err) {
+            logger.warn({err})
+        }
         
         dbc.end()
         dbc = null
     } else {
-        logger.warning('Error: not miners data from server')
+        logger.warn('Error: not miners data from server')
     }
 } catch (err) {
     logger.error({err})
