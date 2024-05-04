@@ -239,7 +239,8 @@ export async function calculateStatistics(dbc, epoch) {
             Math.round(stat[0] / stat[1]), // avg. hshrate, only activity minutes
             Math.round(stat[1] / totalMinutes * 10000) / 100, // % activity
             stat[2].toISOString().split('.')[0], // start activity
-            stat[3].toISOString().split('.')[0] // last activity
+            stat[3].toISOString().split('.')[0], // last activity
+            stat[1] // active minutes
         ])
         //console.log(item[2] + ' = ' + Math.round(stat[0] / totalMinutes) + ' Its / ' + (Math.round(stat[1] * 60 / totalMinutes * 100) / 100) + ' %')
     })
@@ -288,4 +289,24 @@ export async function getSolsStatistics(dbc, interval = 3600, epoch) {
         })
     }
     return data
+}
+
+/**
+ * 
+ * @param {*} minutes
+ * @returns [day, hour, minute]
+ */
+export function minutesToDays(minutes) {
+    let day = Math.floor(minutes / 1440),
+        hour = Math.floor((minutes - day * 1440) / 60),
+        minute = Math.round(minutes - day * 1440 - hour * 60)
+    if (minute === 60) {
+        hour++
+        minute = 0
+    }
+    if (hour === 24) {
+        day++
+        hour = 0
+    }
+    return [day, hour, minute]
 }
