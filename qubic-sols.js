@@ -24,16 +24,6 @@ try {
 }
 
 try {
-    let price = 0
-    price = await getPrice(5000)
-    fs.writeFile(__dirname + '/data/price.txt', price.toString(), err => { 
-        if(err) throw err
-    })
-} catch(err) {
-    logger.warn(err, 'price processing error')
-}
-
-try {
     let data = await getSolsStatistics(dbc, 7200)
     fs.writeFileSync(__dirname + '/data/solutions.json', JSON.stringify(Object.fromEntries(data)), err => { 
         if(err) logger.error({err})

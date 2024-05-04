@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 import mysql from 'mysql2/promise'
 import { confLogger, confDb } from "./config.js"
-import { calculateStatistics, dbConnect } from "./functions.js"
+import { calculateStatistics, dbConnect, getCurrentEpoch, getSolsStatistics, getPrice } from "./functions.js"
 
 process.env.TZ = "UTC"
 const __filename = fileURLToPath(import.meta.url)
@@ -36,6 +36,17 @@ try {
     if (data.netHashrate) netHashrate = data.netHashrate
 } catch (err) {
     logger.warn({err})
+}
+
+
+try {
+    let price = 0
+    price = await getPrice(5000)
+    fs.writeFile(__dirname + '/data/price.txt', price.toString(), err => { 
+        if(err) throw err
+    })
+} catch(err) {
+    logger.warn(err, 'price processing error')
 }
 
 try {
