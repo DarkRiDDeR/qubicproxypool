@@ -14030,20 +14030,26 @@ textarea.form-control-lg {
 #epochProgress .progress-bar > span {
   margin: 0.5em;
 }
+.header-nav-center {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+.footer {
+  position: relative;
+}
+
 @media (min-width: 576px) {
   #epochProgress {
     font-size: 1.6em;
   }
 }
-
-.footer {
-  position: relative;
-}
-.header-nav-center,
-.footer-copy {
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%, 0);
+@media (min-width: 768px) {
+  .footer-copy {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+  }
 }
 
 [data-coreui-theme=dark] body {
