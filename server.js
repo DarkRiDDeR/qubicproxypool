@@ -222,6 +222,13 @@ app.get('/panel/stats/', nocache, checkAuth, function(req, res){
                         })
                     }
                 }
+                
+                users.sort((a, b) => {
+                    return a[0] > b[0] ? 1 : -1 
+                })
+                workers.sort((a, b) => {
+                    return a[0] > b[0] ? 1 : -1 
+                })
             } else if (data.users[req.session.userId]) {
                 data.users[req.session.userId].workers.forEach(worker => {
                     worker[0] = data.users[req.session.userId].login + '.' + worker[0]
