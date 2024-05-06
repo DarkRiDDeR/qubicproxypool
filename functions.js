@@ -5,6 +5,27 @@ import { confDb, confEpoch, confQubic} from './config.js'
 import moment from 'moment'
 import { match } from 'node:assert'
 
+export function compareMinerVersion (v1, v2) {
+    let [v11, v12, v13] = v1.split('.')
+    let [v21, v22, v23]  = v2.split('.')
+    v11 = parseInt(v11)
+    v12 = v12 ? parseInt(v12) : 0
+    v13 = v13 ? parseInt(v13) : 0
+    v21 = parseInt(v21)
+    v22 = v22 ? parseInt(v22) : 0
+    v23 = v23 ? parseInt(v23) : 0
+
+    if (v11 > v21) return 1
+    else if (v11 == v21) {
+        if (v12 > v22) return 1
+        else if (v12 == v22) {
+            if (v13 > v23) return 1
+            else if (v13 == v23) return 0
+        }
+    }
+    return -1
+}
+
 export function getPasswordHash(password) {
     return createHash('sha256').update('QubicPowerProxy' + password).digest('hex')
 }

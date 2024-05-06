@@ -1,10 +1,10 @@
-
 import { argv } from 'node:process'
 import { stat } from 'node:fs'
 import { match } from 'node:assert'
 import mysql from 'mysql2/promise'
-import { confLogger, confUsers, confDb } from "./config.js"
-import { dbConnect, dbCreateUser, getCurrentEpoch, getTimestampOfLastWednesday, getPasswordHash, getPrice, calculateStatistics } from "./functions.js"
+import moment from 'moment'
+import { confLogger, confUsers, confDb, confEpoch, confQubic } from "./config.js"
+import { dbConnect, dbCreateUser, getCurrentEpoch, getTimestampOfLastWednesday, getPasswordHash, getPrice, calculateStatistics, compareMinerVersion } from "./functions.js"
 
 /*Launching the Node.js process as:
 node process-args.js one two=three four 
@@ -73,11 +73,38 @@ if (argv[2] == 'install') {
     progress = Math.round(progress * 10000) / 100
     let startDate = new Date(getTimestampOfLastWednesday())
     console.log(`Epoch=${epoch}; Progress: ${progress}%; Start date: ` + startDate.toISOString())
-} else if (argv[2] == 'price') {
-    console.log(await getPrice())
 } else if (argv[2] == 'calc') {
     let data = await calculateStatistics(dbc, argv[3])
-    console.log(JSON.stringify(data, null, 2))
+} else if (argv[2] == 'detect-old-verion') {
+    let epoch = argv[3]
+    if (!epoch) {
+        epoch = getCurrentEpoch()[0]
+    }
+    let start = confEpoch.timestamp / 1000 + 604800 * (epoch - confEpoch.number) + 3600// старт после 1 часа эпохи
+    let finish = start + 604800 - 3600
+    let data = new Map()
+
+    const [rows] = await dbc.query(
+        {
+            sql: `
+                SELECT DISTINCT id, worker_id, user_id, time,  hashrate, version
+                FROM workers_statistics
+                WHERE time>= ? and time < ?
+                ORDER BY id
+            `, rowsAsArray: true
+        },
+        [moment.unix(start).format('YYYY-MM-D HH:mm:ss'), moment.unix(finish).format('YYYY-MM-D HH:mm:ss')]
+    )
+    if (rows.length) {
+        rows.forEach(row => {
+            if (compareMinerVersion(row[5], confQubic.minVersion) == -1 && !data.has(row[1])) {
+                data.set(row[1], row)
+            }
+        })
+    }
+    console.log(data)
+} else if (argv[2] == 'price') {
+    console.log(await getPrice())
 } else {
     console.error('Error: command not find')
 }
