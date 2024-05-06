@@ -195,7 +195,7 @@ app.get('/panel/', checkAuth, function(req, res){
 })
 app.get('/panel/stats/', nocache, checkAuth, function(req, res){
     let users = [] // [login, avg hashrate, procent]
-    let workers = [] // [alias, avg hashrate, procent activity, start activity, last activity, active minutes]
+    let workers = [] // [alias, avg hashrate, procent activity, start activity, last activity, active minutes, Accounting]
     try {
         let data  = fs.readFileSync(__dirname + '/data/calc-stats.json', 'utf8')
         data = JSON.parse(data)
@@ -218,8 +218,6 @@ app.get('/panel/stats/', nocache, checkAuth, function(req, res){
                         fnPushUser(data.users[key], false)
                         data.users[key].workers.forEach(worker => {
                             worker[0] = data.users[key].login + '.' + worker[0]
-                            const [d, h, m] = minutesToDays(worker[5])
-                            worker[5] = (d > 0 ? `${d} d ` : "") + (h > 0 ? `${h} h ` : '') + `${m} min`
                             workers.push(worker)
                         })
                     }
@@ -227,8 +225,6 @@ app.get('/panel/stats/', nocache, checkAuth, function(req, res){
             } else if (data.users[req.session.userId]) {
                 data.users[req.session.userId].workers.forEach(worker => {
                     worker[0] = data.users[req.session.userId].login + '.' + worker[0]
-                    const [d, h, m] = minutesToDays(worker[5])
-                    worker[5] = (d > 0 ? `${d} d ` : "") + (h > 0 ? `${h} h ` : '') + `${m} min`
                     workers.push(worker)
                 })
                 fnPushUser(data.users[req.session.userId], false, true)

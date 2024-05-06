@@ -3,8 +3,8 @@ import fs from 'node:fs'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 import mysql from 'mysql2/promise'
-import { confLogger, confDb } from "./config.js"
-import { calculateStatistics, dbConnect, getCurrentEpoch, getSolsStatistics, getPrice } from "./functions.js"
+import { confLogger, confDb, confQubic } from "./config.js"
+import { calculateStatistics, minutesToDays, getPrice } from "./functions.js"
 
 process.env.TZ = "UTC"
 const __filename = fileURLToPath(import.meta.url)
@@ -70,6 +70,17 @@ try {
                 potencialUSD: Math.round(potencialSols * solPrice * 100 * 0.84) / 100, // commission 16%
             }
             data.users[key].statistics[1] = Math.round(data.users[key].statistics[1] * 100) / 100
+
+            // time indexes 3, 4. 	2024-05-01T13:00:19 to 	2024-05-01T13:00
+            data.users[key].workers.forEach((item, workerKey) => {
+                item[3] = item[3].slice(0, item[3].lastIndexOf(':'))
+                item[4] = item[4].slice(0, item[4].lastIndexOf(':'))
+
+                const [d, h, m] = minutesToDays(item[5])
+                item[6] = item[5] >= confQubic.minActiveMinutes
+                item[5] = (d > 0 ? `${d} d ` : "") + (h > 0 ? `${h} h ` : '') + `${m} min`
+                data.users[key].workers[workerKey] = item
+            });
         }
     }
 
