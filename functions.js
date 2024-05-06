@@ -116,7 +116,7 @@ export function qubicClearWorker (token, workerId, timeout = 5000) {
     })
 }
 
-export async function calculateStatistics(dbc, epoch) {
+export async function calculateStatistics(dbc, epoch, enableMinActivity = false) {
     if (!epoch) {
         epoch = getCurrentEpoch()[0]
     }
@@ -143,7 +143,7 @@ export async function calculateStatistics(dbc, epoch) {
     let timestamp = rows[0][0]
     let item = []
     let isInactive = false
-    let is0Its = false
+    let currentItem
     rows.forEach(row => {
         if (timestamp != row[0]) {
             hashratesForTime.push([timestamp, item])
@@ -153,10 +153,36 @@ export async function calculateStatistics(dbc, epoch) {
         item.push([row[1], row[2], row[3], row[4], row[5]])
     })
     hashratesForTime.push([timestamp, item])
-
-    let currentItem = hashratesForTime.shift() // [[userId, workerId, hashrate, isActive, lastActivity]..]]
     start = rows[0][0]
     finish = rows[rows.length - 1][0]
+
+
+    // detect workers with low activity
+    let workersActivity
+    if (enableMinActivity) {
+        let index = 0
+        currentItem = hashratesForTime[index++]
+        workersActivity = new Map() // [id, minutes]
+        for(let i = start; i <= finish; i += 60) {
+            if (currentItem[0] < i) {
+                currentItem = hashratesForTime[index++]
+            }
+
+            currentItem[1].forEach((workerItem) => {
+                if (workerItem[3]) {
+                    if (workersActivity.has(workerItem[1])) {
+                        workersActivity.set(workerItem[1], workersActivity.get(workerItem[1]) + 1)
+                    } else {
+                        workersActivity.set(workerItem[1], 1)
+                    }
+                }
+            })
+        }
+        //console.log(workersActivity)
+    }
+
+
+    currentItem = hashratesForTime.shift() // [[userId, workerId, hashrate, isActive, lastActivity]..]]
     let totalMinutes = Math.ceil((finish - start) / 60)
     let totalActiveMinutes = totalMinutes
     const userStatsEpoch = new Map() // [[userId, [hashrateSum, procentSum]...]
@@ -173,31 +199,35 @@ export async function calculateStatistics(dbc, epoch) {
 
         let userStats = new Map()// [[userId , [hashrateSum, procentSum]]...] // статистика на пользователя в минуту
         currentItem[1].forEach((workerItem) => {
-            //console.log(workerItem)
-            if (!workerItem[3]) { //если неактивен, то нулевой хешрейт
-                workerItem[2] = 0
-            } else if (workerItem[2] == 0 && prevWorkerHashrates.has(workerItem[1])) {  // если активен, но хешрейт ещё не определился = 0, то берём предыдущий при его наличии
-                workerItem[2] = prevWorkerHashrates[workerItem[1]]
-            }
-            prevWorkerHashrates[workerItem[1]] = workerItem[2]
-            
-            let workerStatsEpochItem = [0, 0, '', '']
-            if (workerStatsEpoch.has(workerItem[1])) {
-                workerStatsEpochItem = workerStatsEpoch.get(workerItem[1])
-            }
-            workerStatsEpochItem[0] += workerItem[2] // суммарный хешрейт на воркера.
-            if (workerItem[3]) ++workerStatsEpochItem[1] // активные минуты воркера
-            if (!workerStatsEpochItem[2]) workerStatsEpochItem[2] = moment.unix(i) // startActivity
-            workerStatsEpochItem[3] = workerItem[4] // last activity
-            hashrateSumForMinute += workerItem[2]
-            workerStatsEpoch.set(workerItem[1], workerStatsEpochItem)
+            // пропускаем подсчёт воркеров с маленькой активностью
+            if (!workersActivity || workersActivity.get(workerItem[1]) >= confQubic.minActiveMinutes) {
 
-            let userStatsItem = [0, 0]
-            if (userStats.has(workerItem[0])) {
-                userStatsItem = userStats.get(workerItem[0])
+                //console.log(workerItem)
+                if (!workerItem[3]) { //если неактивен, то нулевой хешрейт
+                    workerItem[2] = 0
+                } else if (workerItem[2] == 0 && prevWorkerHashrates.has(workerItem[1])) {  // если активен, но хешрейт ещё не определился = 0, то берём предыдущий при его наличии
+                    workerItem[2] = prevWorkerHashrates[workerItem[1]]
+                }
+                prevWorkerHashrates[workerItem[1]] = workerItem[2]
+                
+                let workerStatsEpochItem = [0, 0, '', '']
+                if (workerStatsEpoch.has(workerItem[1])) {
+                    workerStatsEpochItem = workerStatsEpoch.get(workerItem[1])
+                }
+                workerStatsEpochItem[0] += workerItem[2] // суммарный хешрейт на воркера.
+                if (workerItem[3]) ++workerStatsEpochItem[1] // активные минуты воркера
+                if (!workerStatsEpochItem[2]) workerStatsEpochItem[2] = moment.unix(i) // startActivity
+                workerStatsEpochItem[3] = workerItem[4] // last activity
+                hashrateSumForMinute += workerItem[2]
+                workerStatsEpoch.set(workerItem[1], workerStatsEpochItem)
+
+                let userStatsItem = [0, 0]
+                if (userStats.has(workerItem[0])) {
+                    userStatsItem = userStats.get(workerItem[0])
+                }
+                userStatsItem[0] += workerItem[2]
+                userStats.set(workerItem[0], userStatsItem)
             }
-            userStatsItem[0] += workerItem[2]
-            userStats.set(workerItem[0], userStatsItem)
         })
 
         if (!hashrateSumForMinute) {
@@ -268,6 +298,34 @@ export async function calculateStatistics(dbc, epoch) {
     //console.log(JSON.stringify(data, null, 2))
     //console.log(data.users[9].workers)
     return data
+}
+
+export async function getHashrateStatistics(dbc, interval = 3600, epoch) {
+    if (!epoch) {
+        epoch = getCurrentEpoch()[0]
+    }
+    let start = confEpoch.timestamp / 1000 + 604800 * (epoch - confEpoch.number) + 3600
+    let finish = start + 604800 + 3600
+
+    let data = []
+
+    const [usersRows] = await dbc.query({sql: 'SELECT id, login FROM users', rowsAsArray: true})
+    const [rows] = await dbc.query(
+        {
+            sql: `
+                SELECT DISTINCT UNIX_TIMESTAMP(time) AS timestamp, user_id, worker_id, hashrate, is_active, last_active
+                FROM workers_statistics
+                WHERE time>= ? and time < ?
+                ORDER BY timestamp
+            `, rowsAsArray: true
+        },
+        [moment.unix(start).format('YYYY-MM-D HH:mm:ss'), moment.unix(finish).format('YYYY-MM-D HH:mm:ss')]
+    )
+    if (!rows.length) {
+        return data
+    }
+
+
 }
 
 /**

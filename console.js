@@ -73,8 +73,13 @@ if (argv[2] == 'install') {
     progress = Math.round(progress * 10000) / 100
     let startDate = new Date(getTimestampOfLastWednesday())
     console.log(`Epoch=${epoch}; Progress: ${progress}%; Start date: ` + startDate.toISOString())
-} else if (argv[2] == 'calc') {
-    let data = await calculateStatistics(dbc, argv[3])
+} else if (argv[2] == 'calc') { // epoch, enableMinActivity = false
+    let data = await calculateStatistics(dbc, argv[3], argv[4])
+    for (var key in data.users) {
+        if (data.users.hasOwnProperty(key)) {
+            console.log(data.users[key].login + '   ' + data.users[key].statistics[1])
+        }
+    }
 } else if (argv[2] == 'detect-old-verion') {
     let epoch = argv[3]
     if (!epoch) {
