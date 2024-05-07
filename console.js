@@ -178,7 +178,7 @@ if (argv[2] == 'install') {
     workers.sort((a,b) => (a[1] > b[1] ? 1 : -1))
     workers.forEach(item => {
         const [d, h, m] = minutesToDays(item[0])
-        console.log(item[1] + ` ${d}d-${h}h-${m}min`)
+        console.log(item[1] + ' ' + (d<9?'0':'') + `${d}d_` + (h<9?'0':'') + `${h}h_` + (m<9?'0':'') + `${m}min`)
     })
     
 } else if (argv[2] == 'price') {
