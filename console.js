@@ -3,8 +3,8 @@ import { stat } from 'node:fs'
 import { match } from 'node:assert'
 import mysql from 'mysql2/promise'
 import moment from 'moment'
-import { confLogger, confUsers, confDb, confEpoch, confQubic } from "./config.js"
-import { dbConnect, dbCreateUser, getCurrentEpoch, getTimestampOfLastWednesday, getPasswordHash, getPrice, calculateStatistics, compareMinerVersion } from "./functions.js"
+import { confUsers, confDb, confEpoch, confQubic } from "./config.js"
+import { minutesToDays, dbCreateUser, getCurrentEpoch, getTimestampOfLastWednesday, getPasswordHash, getPrice, calculateStatistics, compareMinerVersion } from "./functions.js"
 
 /*Launching the Node.js process as:
 node process-args.js one two=three four 
@@ -41,7 +41,7 @@ if (argv[2] == 'install') {
         console.log(err)
     }
 } else if (argv[2] == 'users') {
-    const [rows] = await dbc.query({sql: 'SELECT login, email, wallet FROM users', rowsAsArray: true})
+    const [rows] = await dbc.query({sql: 'SELECT login, email, wallet FROM users ORDER BY login', rowsAsArray: true})
     rows.forEach(item => {
         console.log(item[0] + '   ' + item[1] + '   ' + item[2])
     })
@@ -73,13 +73,16 @@ if (argv[2] == 'install') {
     progress = Math.round(progress * 10000) / 100
     let startDate = new Date(getTimestampOfLastWednesday())
     console.log(`Epoch=${epoch}; Progress: ${progress}%; Start date: ` + startDate.toISOString())
+
 } else if (argv[2] == 'calc') { // epoch, enableMinActivity = false
-    let data = await calculateStatistics(dbc, argv[3], argv[4])
-    for (var key in data.users) {
-        if (data.users.hasOwnProperty(key)) {
-            console.log(data.users[key].login + '   ' + data.users[key].statistics[1])
-        }
-    }
+    let data = await calculateStatistics(dbc, argv[3], argv[4] === 'true' || argv[4] === '1')
+    if (!data.users.length) console.log([])
+
+    const [rows] = await dbc.query({sql: 'SELECT id, login, wallet FROM users WHERE id IN (' + Object.keys(data.users).join(',') + ') ORDER BY login', rowsAsArray: true})
+    rows.forEach(row => {
+        console.log(row[1] + '   ' + data.users[row[0]].statistics[1] + '   ' + row[2])
+    })
+
 } else if (argv[2] == 'detect-old-verion') {
     let epoch = argv[3]
     if (!epoch) {
@@ -108,8 +111,79 @@ if (argv[2] == 'install') {
         })
     }
     console.log(data)
+
+} else if (argv[2] == 'low-activity') {
+    let epoch = parseInt(argv[3])
+    if (!epoch) epoch = getCurrentEpoch()[0]
+    let start = confEpoch.timestamp / 1000 + 604800 * (epoch - confEpoch.number) + 3600// старт после 1 часа эпохи
+    let finish = start + 604800 - 3600
+
+    const [usersRows] = await dbc.query({sql: 'SELECT id, login FROM users', rowsAsArray: true})
+    const [rows] = await dbc.query(
+        {sql: `
+                SELECT DISTINCT UNIX_TIMESTAMP(time) AS timestamp, workers_statistics.worker_id, is_active, CONCAT(users.login, '.', workers.name)
+                FROM workers_statistics
+                INNER JOIN workers ON workers.id = workers_statistics.worker_id
+                INNER JOIN users ON users.id = workers_statistics.user_id
+                WHERE time>= ? and time < ?
+                ORDER BY timestamp
+            `, rowsAsArray: true
+        },
+        [moment.unix(start).format('YYYY-MM-D HH:mm:ss'), moment.unix(finish).format('YYYY-MM-D HH:mm:ss')]
+    )
+    //console.log(rows)
+        
+    let hashratesForTime = [] // [[time, [worker_id, isActive, alias]]..]
+    let timestamp = rows[0][0]
+    let item = []
+    let currentItem
+    rows.forEach(row => {
+        if (timestamp != row[0]) {
+            hashratesForTime.push([timestamp, item])
+            timestamp = row[0]
+            item = []
+        }
+        item.push([row[1], row[2], row[3]])
+    })
+    hashratesForTime.push([timestamp, item])
+    start = rows[0][0]
+    finish = rows[rows.length - 1][0]
+    //console.log(hashratesForTime[0])
+
+    // detect workers with low activity
+    let workers
+    currentItem = hashratesForTime.shift()
+    workers = new Map() // [id, [userId, minutes]]
+    for(let i = start; i <= finish; i += 60) {
+        if (currentItem[0] < i) {
+            currentItem = hashratesForTime.shift()
+        }
+        currentItem[1].forEach((workerItem) => {
+            if (workerItem[1]) {
+                if (workers.has(workerItem[0])) {
+                    item = workers.get(workerItem[0])
+                    item[0]++
+                    workers.set(workerItem[0], item)
+                } else {
+                    workers.set(workerItem[0], [1, workerItem[2]])
+                }
+            }
+        })
+    }
+    //console.log(workers)
+    workers.forEach((item, key) => {
+        if (item[0] >= confQubic.minActiveMinutes) workers.delete(key)
+    })
+    workers = [...workers.values()]
+    workers.sort((a,b) => (a[1] > b[1] ? 1 : -1))
+    workers.forEach(item => {
+        const [d, h, m] = minutesToDays(item[0])
+        console.log(item[1] + ` ${d}d-${h}h-${m}min`)
+    })
+    
 } else if (argv[2] == 'price') {
     console.log(await getPrice())
+
 } else {
     console.error('Error: command not find')
 }
