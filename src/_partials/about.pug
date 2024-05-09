@@ -43,20 +43,20 @@ p Qubic coin:
   span.text-info KNIJXAGWQREUSFCFOHGRBAZNAQZAILFQBPFRVWPOECGPFNATPBDOCWUCZKMN
 br
 
-h2 Exchanges with Qubic coin
-.container.text-center.exchanges-icons
-  .row
-    .col-auto.d-flex.align-items-center
-      a(href="https://safe.trade/" target="_blank")
-        img(src="/assets/img/safetrade.png" alt="SafeTrade")
-    .col-auto.d-flex.align-items-center
-      a(href="https://tradeogre.com/" target="_blank") 
-        img(src="/assets/img/tradeogre.svg" alt="TradeOgre")
+//--  h2 Exchanges with Qubic coin
+  .container.text-center.exchanges-icons
+    .row
+      .col-auto.d-flex.align-items-center
+        a(href="https://safe.trade/" target="_blank")
+          img(src="/assets/img/safetrade.png" alt="SafeTrade")
+      .col-auto.d-flex.align-items-center
+        a(href="https://tradeogre.com/" target="_blank") 
+          img(src="/assets/img/tradeogre.svg" alt="TradeOgre")
 
-h2 PPSTI reward system
-p The pool uses the PPSTI (Payment per share for time intervals) system to calculate rewards. This is a modified version of the PPS (Pay-Per-Share) payment system. 
-p The pool calculates the reward and makes payment for each miner ball sent for a certain time interval, regardless of whether the pool finds a solution or not. The time intervals are evenly distributed throughout the epoch. That is, a miner who has had a stable hash rate for the entire epoch will receive a larger reward than those who joined during the epoch or had fluctuating power.
-p The PPLNS (Pay-Per-Last-N-Shares ) payout system is not used for the reason that finding solutions (sol) is not equal to finding standard blocks when mining cryptocurrency. The number of solutions paid for the work of a miner can change when the algorithm changes, i.e. the price of a solution can be different per epoch. And also in the Qubic network a stable hashrate over a long distance is important, and the PPSTI payout system supports such miners.
+h2 P3TI reward system
+p The pool uses the P3TI (Payment per performance for time intervals) system to calculate rewards.
+p The pool calculates the reward for the average perfomance (estimated at it/s) in a certain time interval, regardless of whether the pool found a solution or not. Time intervals are evenly distributed across the epoch. That is, a miner who had a stable perfomance (estimated at it/s) throughout the epoch will receive a greater reward than those who joined during the epoch or had fluctuating perfomance.
+p The PPLNS (Pay-Per-Last-N-Shares ) payout system on the qubic network is not very good that finding solutions (sol) is not equal to finding standard blocks when mining cryptocurrency. The number of solutions paid for the work of a miner can change when the algorithm changes, i.e. the price of a solution can be different during the epoch. And also in the Qubic network a stable hashrate over a long distance is important. PPLNS in the qubic network carries a potential loss of part of the income.
 
 
 p.d-inline-flex.gap-1
@@ -233,7 +233,7 @@ p.d-inline-flex.gap-1
     // /..table-responsive  
     p
       br
-      | Calculation of share for each time interval (PPSTI):
+      | Calculation of share for each time interval (P3TI):
     .table-responsive
       table.table.table-striped.border.mb-0
         thead.fw-semibold.text-nowrap

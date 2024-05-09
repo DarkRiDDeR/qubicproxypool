@@ -381,7 +381,7 @@ try {
         try {
             const [rowsSolutions] = await dbc.query(
                 {sql: 'SELECT number FROM `solutions` WHERE time > ? ORDER BY `id` DESC LIMIT 1', rowsAsArray: true},
-                [moment.unix(getEpochStartTimestamp()).format('YYYY-MM-D HH:mm:ss')]
+                [moment.unix(getEpochStartTimestamp()+3600).format('YYYY-MM-D HH:mm:ss')]
             )
             if (rowsSolutions.length == 0 || currentSols > rowsSolutions[0][0]) {
                 await dbc.query('INSERT INTO solutions(number) VALUES (?);', [currentSols])
