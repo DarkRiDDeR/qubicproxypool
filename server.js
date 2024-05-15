@@ -260,6 +260,9 @@ app.get('/panel/profile/', checkAuth, async function(req, res, next){
 app.get('/panel/about/', checkAuth, function(req, res){
     res.render('about.pug')
 })
+app.get('/panel/calc/', checkAuth, function(req, res){
+    res.render('profitcalc.pug')
+})
 app.get('/panel/instruction/', checkAuth, function(req, res){
     res.render('instruction.pug')
 })
