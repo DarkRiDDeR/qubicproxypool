@@ -68,6 +68,10 @@ if (argv[2] == 'install') {
         [rows] = await dbc.query('UPDATE users SET password = ? WHERE login = ?', [getPasswordHash(argv[4]), argv[3]])
     }
     console.log(rows.info)
+} else if (argv[2] == 'user-change-wallet' && argv[3] && argv[4]) {
+    let rows
+    [rows] = await dbc.query('UPDATE users SET wallet = ? WHERE login = ?', [argv[4], argv[3]])
+    console.log(rows.info)
 } else if (argv[2] == 'epoch') {
     let [epoch, progress] = getCurrentEpoch()
     progress = Math.round(progress * 10000) / 100
