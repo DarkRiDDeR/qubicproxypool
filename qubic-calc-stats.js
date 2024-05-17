@@ -64,8 +64,10 @@ try {
     for (var key in data.users) {
         if (data.users.hasOwnProperty(key)) {
             const potencialSols = 7 * 24 * data.users[key].statistics[0] * netSolsPerHour / netHashrate
+            const sols = data.users[key].statistics[1] * totalSols
             data.users[key].revenue = {
-                solulions: Math.round(data.users[key].statistics[1] * totalSols) / 100,
+                solulions: Math.round(sols) / 100,
+                estRevenue: Math.round(sols * solPrice * (1 - confQubic.commissionOfEstRevenue)) / 100,
                 potencialSols: Math.round(potencialSols * 100) / 100,
                 potencialUSD: Math.round(potencialSols * solPrice * 100 * 0.84) / 100, // commission 16%
             }

@@ -87,24 +87,27 @@ block view
                   th.bg-body-secondary(title="Average hashrate in the epoch") Avg. hashrate
                   th.bg-body-secondary(title="Percentage of total contribution") Prct. (P3TI)
                   th.bg-body-secondary(title="Current solutions") Current sols (%)
+                  th.bg-body-secondary(title="Current estimated revenue") Est. Revenue
                   th.bg-body-secondary(title="Potential solutions per epoch") Potential sols
                   th.bg-body-secondary(title="Potential revenue per epoch") Potential revenue
               tbody
                 each user in users
-                  if user[6]
+                  if user[7]
                     tr.align-middle.fw-bolder
                       td.text-info= user[0]
                       td.text-info #{user[1]} It/s
                       td.text-info #{user[2]}%
                       td.text-info= user[3]
-                      td.text-info= user[4]
-                      td.text-info #{user[5]}$
+                      td.text-info #{user[4]}$
+                      td.text-info= user[5]
+                      td.text-info #{user[6]}$
                   else 
                     tr.align-middle
                       td= user[0]
                       td #{user[1]} It/s
                       td #{user[2]}%
                       td= user[3]
-                      td= user[4]
-                      td #{user[5]}$
+                      td #{user[4]}$
+                      td= user[5]
+                      td #{user[6]}$
 

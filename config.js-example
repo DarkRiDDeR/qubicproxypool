@@ -9,7 +9,10 @@ export const confQubic = {
     password: '',
     token2fa: '',
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0',
-    cleaningAfterInactivity: 21600000, // 6 hours
+    cleaningAfterInactivity: 2160000000, // 600 hours
+    minVersion: '1.9.5',
+    minActiveMinutes: 3000,//720,
+    commissionOfEstRevenue: 0.16,
     //specificDataServer: 'http://stanvps.ddns.net:8100/receive.txt'
 }
 export const confUsers = {

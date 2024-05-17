@@ -207,6 +207,7 @@ app.get('/panel/stats/', nocache, checkAuth, function(req, res){
                     user.statistics[0],
                     user.statistics[1],
                     user.revenue.solulions,
+                    user.revenue.estRevenue,
                     user.revenue.potencialSols,
                     user.revenue.potencialUSD,
                     highlight
