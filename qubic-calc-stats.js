@@ -69,7 +69,7 @@ try {
                 solulions: Math.round(sols) / 100,
                 estRevenue: Math.round(sols * solPrice * (1 - confQubic.commissionOfEstRevenue)) / 100,
                 potencialSols: Math.round(potencialSols * 100) / 100,
-                potencialUSD: Math.round(potencialSols * solPrice * 100 * 0.84) / 100, // commission 16%
+                potencialUSD: Math.round(potencialSols * solPrice * 100 * (1 - confQubic.commissionOfEstRevenue)) / 100,
             }
             data.users[key].statistics[1] = Math.round(data.users[key].statistics[1] * 100) / 100
 

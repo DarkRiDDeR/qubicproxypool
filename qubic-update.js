@@ -349,7 +349,7 @@ try {
             const netHashrate = serverData['estimatedIts']
             const netAvgScores = serverData['averageScore']
             const netSolsPerHour = serverData['solutionsPerHour']
-            const poolReward = 0.85
+            const poolReward = 1 //0.85
             const incomePerOneIts = poolReward * price * 1000000000000 / netHashrate / 7 / 1.06
             const curSolPrice = 1479289940 * poolReward * progress * price / (netAvgScores * 1.06)
             fs.writeFile(__dirname + '/data/maininfo.json', JSON.stringify({
