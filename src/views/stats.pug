@@ -98,16 +98,16 @@ block view
                       td.text-info #{user[1]} It/s
                       td.text-info #{user[2]}%
                       td.text-info= user[3]
-                      td.text-info #{user[4]}$
-                      td.text-info= user[5]
-                      td.text-info #{user[6]}$
+                      td.text-info #{user[4] ? user[4] + '$' : '-'}
+                      td.text-info #{user[5] ? user[5] : '-'}
+                      td.text-info #{user[6] ? user[6] + '$' : '-'}
                   else 
                     tr.align-middle
                       td= user[0]
                       td #{user[1]} It/s
                       td #{user[2]}%
                       td= user[3]
-                      td #{user[4]}$
-                      td= user[5]
-                      td #{user[6]}$
+                      td #{user[4] ? user[4] + '$' : '-'}
+                      td #{user[5] ? user[5] : '-'}
+                      td #{user[6] ? user[6] + '$' : '-'}
 
