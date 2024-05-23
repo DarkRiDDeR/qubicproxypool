@@ -370,7 +370,7 @@ try {
             writeDataMainInfo.netAvgScores = netAvgScores
             writeDataMainInfo.netSolsPerHour = netSolsPerHour
             writeDataMainInfo.incomePerOneIts = price * 1000000000000 / netHashrate / 7 / 1.06
-            writeDataMainInfo.curSolPrice = 1479289940 * progress * price / (netAvgScores * 1.06)
+            writeDataMainInfo.curSolPrice = 1479289940 * currentEpoch[1] * price / (netAvgScores * 1.06)
         } catch(err) {
             logger.warn({mes: 'Err Score/Get', err})
         }
