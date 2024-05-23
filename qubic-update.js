@@ -5,7 +5,7 @@ import { dirname } from 'path'
 import moment from 'moment'
 import twoFactor from 'node-2fa'
 import { confEpoch, confLogger, confQubic } from "./config.js"
-import { dbConnect, getEpochStartTimestamp, getSolsStatistics, qubicClearWorker } from "./functions.js"
+import { dbConnect, getCurrentEpoch, getEpochStartTimestamp, getSolsStatistics, qubicClearWorker } from "./functions.js"
 
 process.env.TZ = "UTC"
 const __filename = fileURLToPath(import.meta.url)
@@ -309,9 +309,31 @@ try {
 
         //Fetches and returns network statistics
         serverData = ''
-        let responsePerformance = ''
+        let currentSols = 0
+        const millisecondsInWeek = 604800000
+        const currentEpoch = getCurrentEpoch() //serverData['scoreStatistics'][0]['epoch']
+        const epochBegin = confEpoch.timestamp + millisecondsInWeek * (currentEpoch[0] - confEpoch.number) // confEpoch.timestamp - epoch 103
+        const epochEnd = epochBegin + millisecondsInWeek - 1000
+        let writeDataMainInfo = {
+            updateTime: Date.now(),
+            price,
+            epoch: currentEpoch[0],
+            epochBegin,
+            epochEnd,
+            progress: currentEpoch[1],
+            netHashrate: 0,
+            netAvgScores: 0,
+            netSolsPerHour: 0,
+            incomePerOneIts: 0,
+            curSolPrice: 0,
+            total: {
+                solutions: currentSols, //totalSolutions,
+                hashrate: totalHashrate,
+                activeWorkers: totalActiveWorkers
+            }
+        }
         try {
-            responsePerformance = await fetch(`https://api.qubic.li/My/Pool/${serverUserId}/Performance`, {
+            serverData = await fetch(`https://api.qubic.li/My/Pool/${serverUserId}/Performance`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -320,7 +342,15 @@ try {
                 },
                 timeout: timeout,
             })
-            responsePerformance = await responsePerformance.json()
+            serverData = await serverData.json()
+            currentSols = parseInt(serverData.foundSolutions)
+            writeDataMainInfo.total.solutions = currentSols
+        } catch(err) {
+            logger.warn({mes: 'Err Pool/Performance', err})
+        }
+
+        serverData = ''
+        try {
 
             response = await fetch('https://api.qubic.li/Score/Get', {
                 method: 'GET',
@@ -332,49 +362,25 @@ try {
                 timeout: 10000,
             })
             serverData = await response.json()
-        } catch(err) {
-            logger.warn({err})
-            serverData = ''
-        }
-
-        const currentSols = parseInt(responsePerformance.foundSolutions)
-        if (serverData) {
-            const now = new Date().getTime()
-            const millisecondsInWweek = 604800000
-            const currentEpochNumber = serverData['scoreStatistics'][0]['epoch']
-            const epoch103Begin = confEpoch.timestamp
-            const epochBegin = epoch103Begin + millisecondsInWweek * (currentEpochNumber - confEpoch.number)
-            const epochEnd = epochBegin + millisecondsInWweek - 1000
-            const progress = (now - epochBegin) / 604800000
             const netHashrate = serverData['estimatedIts']
             const netAvgScores = serverData['averageScore']
             const netSolsPerHour = serverData['solutionsPerHour']
-            const poolReward = 1 //0.85
-            const incomePerOneIts = poolReward * price * 1000000000000 / netHashrate / 7 / 1.06
-            const curSolPrice = 1479289940 * poolReward * progress * price / (netAvgScores * 1.06)
-            fs.writeFile(__dirname + '/data/maininfo.json', JSON.stringify({
-                    updateTime: now,
-                    price,
-                    epoch: currentEpochNumber,
-                    epochBegin,
-                    epochEnd,
-                    progress,
-                    netHashrate,
-                    netAvgScores,
-                    netSolsPerHour,
-                    incomePerOneIts,
-                    curSolPrice,
-                    total: {
-                        solutions: currentSols, //totalSolutions,
-                        hashrate: totalHashrate,
-                        activeWorkers: totalActiveWorkers
-                    }
-                }),
-                err => { 
-                    if(err) throw err
-                }
-            )
+
+            writeDataMainInfo.netHashrate = netHashrate
+            writeDataMainInfo.netAvgScores = netAvgScores
+            writeDataMainInfo.netSolsPerHour = netSolsPerHour
+            writeDataMainInfo.incomePerOneIts = price * 1000000000000 / netHashrate / 7 / 1.06
+            writeDataMainInfo.curSolPrice = 1479289940 * progress * price / (netAvgScores * 1.06)
+        } catch(err) {
+            logger.warn({mes: 'Err Score/Get', err})
         }
+        serverData = ''
+
+        fs.writeFile(__dirname + '/data/maininfo.json', JSON.stringify(writeDataMainInfo),
+            err => { 
+                if(err) throw err
+            }
+        )
 
         // solutions
         //if (currentSols > 0) {
