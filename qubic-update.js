@@ -116,6 +116,10 @@ try {
     if (serverData.miners) {
         // savedata
         serverData = serverData.miners
+        
+        for(let item of serverData) {
+            item.lastActive = item.lastActive.split('.')[0]
+        }
         serverData.sort((a, b) => {
             return a.alias.toLowerCase() > b.alias.toLowerCase() ? 1 : -1 
         })
