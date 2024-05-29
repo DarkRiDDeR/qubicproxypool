@@ -89,7 +89,7 @@ if (argv[2] == 'install') {
         })
     }
 
-} else if (argv[2] == 'calc-payment' && argv[3] && argv[4]) { // epoch, tatal Qubics
+} else if (argv[2] == 'calc-payments' && argv[3] && argv[4]) { // epoch, tatal Qubics
     let epoch = parseInt(argv[3])
     let qubic = parseInt(argv[4])
     let calcData = await calculateStatistics(dbc, epoch, true)
