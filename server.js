@@ -8,9 +8,11 @@ import MySQLSession from 'express-mysql-session'
 import slashes from 'connect-slashes'
 import compression from 'compression'
 import bodyParser from 'body-parser'
+import moment from 'moment'
 import multer from 'multer'
 import { confLogger, confQubic, confServer, confUsers } from "./config.js"
-import { dbConnect, dbCreateUser, dbVerifyUser, minutesToDays } from "./functions.js"
+import { dbConnect, dbCreateUser, dbVerifyUser, getCurrentEpoch, hideUsername, getEpochStartTimestamp } from "./functions.js"
+import { finished } from 'node:stream'
 
 
 process.env.TZ = "UTC"
@@ -189,7 +191,7 @@ app.get('/logout/', function(req, res){
     res.redirect('/')
  })
 
- 
+
 app.get('/panel/', checkAuth, function(req, res){
     res.render('dashboard.pug')
 })
@@ -201,7 +203,7 @@ app.get('/panel/stats/', nocache, checkAuth, function(req, res){
         data = JSON.parse(data)
         if (data.users) {
             const fnPushUser = (user, enableMask = true, highlight = false) => {
-                if (enableMask) user.login = user.login.slice(0, 3) + '******'
+                if (enableMask) user.login = hideUsername(user.login)
                 users.push([
                     user.login,
                     user.statistics[0],
@@ -243,6 +245,13 @@ app.get('/panel/stats/', nocache, checkAuth, function(req, res){
         logger.error({err})
     }
     res.render('stats.pug', {workers, users})
+})
+app.get('/panel/payments/', checkAuth, function(req, res){
+
+    res.render('payments.pug', {
+        startEpoch: 109,
+        finishEpoch: getCurrentEpoch()[0] - 1
+    })
 })
 app.get('/panel/profile/', checkAuth, async function(req, res, next){
     let dbc
@@ -305,6 +314,52 @@ app.get('/api/miners/', nocache, (req, res) => {
         res.sendFile(__dirname + '/data/miners-public.json')
     }
 })
+app.get('/api/payments/:epoch/', nocache, async function(req, res, next){
+    res.setHeader('x-no-compression', '1')
+    //res.header("Content-Type",'application/json')
+    const epoch = parseInt(req.params.epoch)
+    let data = { epoch, total: 0, currentUser: [], payments: [], commission: { prct: 0, value: 0 } }
+    let dbc
+    try {
+        let startEpoch = getEpochStartTimestamp(epoch)
+        data.period = [moment.unix(startEpoch).format('YYYY-MM-DDTHH:mm'), moment.unix(startEpoch + 604800).format('YYYY-MM-DDTHH:mm')]
+        dbc = await dbConnect()
+        let [rows] = await dbc.query({sql: `
+            SELECT users.login, payments.wallet, percentage, value, isSent FROM payments
+            INNER JOIN users ON users.id = payments.user_id
+            WHERE epoch = ?
+            ORDER BY value DESC
+        `, rowsAsArray: true}, [epoch])
+        if (rows.length) {
+            let total = rows.shift()
+            data.total = total[3]
+            let commission = data.total
+            for(let item of rows) {
+                item[2] = Math.round(item[2] * 100000) / 100000
+                if (req.session.user == item[0]) {
+                    data.currentUser = item
+                } else {
+                    item[0] = hideUsername(item[0])
+                    data.payments.push(item)
+                }
+                commission -= item[3]
+            }
+            data.commission = {
+                prct: Math.round(commission / data.total * 10000) / 100,
+                value: commission
+            }
+        }
+
+    } catch(err) {
+        next(err)
+    } finally {
+        if (dbc) {
+            dbc.end()
+        }
+    }
+    console.log(data)
+    res.render('api-payments.pug', {data})
+})
 app.get('/api/solutions/', nocache, (req, res) => {
     res.setHeader('x-no-compression', '1')
     res.header("Content-Type",'application/json')
@@ -326,7 +381,8 @@ app.use((req, res, next) => {
 
 // Handling 500
 app.use(function(error, req, res, next) {
-    logger.error({url: req.url}, error.message)
+    console.log(error)
+    logger.error({url: req.url, error: error.stack})
     res.status(500).render('500.pug');
 })
 app.listen(confServer.port, function () {

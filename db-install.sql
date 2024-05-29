@@ -75,3 +75,16 @@ CREATE TABLE `solutions` (
   epoch INTEGER DEFAULT NULL,
   number INTEGER DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+CREATE TABLE `payments` (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    user_id INTEGER NOT NULL,
+    epoch INTEGER NOT NULL,
+    wallet VARCHAR(60) NOT NULL,
+    percentage DOUBLE NOT NULL,
+    value INTEGER NOT NULL DEFAULT '0',
+    isSent BOOLEAN NOT NULL DEFAULT FALSE,
+    UNIQUE(user_id, epoch),
+    FOREIGN KEY (user_id) REFERENCES users (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

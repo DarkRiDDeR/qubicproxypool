@@ -14030,6 +14030,17 @@ textarea.form-control-lg {
 #epochProgress .progress-bar > span {
   margin: 0.5em;
 }
+#payments-select-epoch {
+  width: 10em;
+}
+#payments-table-info tr td:first-child {
+  padding-left: 0;
+  width: 0;
+  white-space: nowrap;
+}
+#payments-table-info tr td:last-child {
+  width: 100%;
+}
 .header-nav-center {
   position: absolute;
   left: 50%;

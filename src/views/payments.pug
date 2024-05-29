@@ -1,0 +1,43 @@
+extends ../_layout/default.pug
+
+block styles
+
+block scripts
+  if !starter
+    // Plugins and scripts required by this view
+    script(src='/vendors/@coreui/utils/js/index.js')
+    script(src='/js/main.js')
+
+block breadcrumb
+    +breadcrumb(
+    [
+      { href: '/', label: 'Home'},
+      { label: 'About'}
+    ]
+  )
+
+block view
+  .row
+    .col-md-12
+      .card.mb-4
+        .card-body.payments
+          h1 Payments
+          p Transactions explorer of pool wallet:#{' '}
+            a.link-info(href="https://explorer.qubic.org/network/address/NBVIUDBBBXTBSAEWNIQGUYKNYWCDAXCWPECKTJIHRDZLAXJBNBASXYRDLARL" target="_blank") https://explorer.qubic.org/network/address/NBVIUDBBBXTBSAEWNIQGUYKNYWCDAXCWPECKTJIHRDZLAXJBNBASXYRDLARL
+          .row
+            b.col-auto.d-flex.align-items-center Epoch:#{' '}
+            form.col-auto.d-flex.align-items-center
+              select.form-select(id="payments-select-epoch" aria-label="Payments per epoch")
+                - var n = finishEpoch
+                option(selected value=n)= n--
+                while n >= startEpoch
+                  option(value=n)= n--
+          br
+          
+          .content(id="payments-content")
+            .d-flex.justify-content-center.preloader.visible
+              span.spinner-border(role="status")
+                span.visually-hidden Loading...
+          
+
+      

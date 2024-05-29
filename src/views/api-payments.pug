@@ -1,0 +1,40 @@
+div
+  table.table.table-borderless.table-sm(id="payments-table-info")
+    tr
+      td Period (UTC):
+      td #{data.period[0]} - #{data.period[1]}
+    tr
+      td Total:
+      td #{data.total} Qubic
+    tr
+      td Commission (#{data.commission.prct}%):
+      td #{data.commission.value} Qubic
+
+  if data.total
+    br
+    .table-responsive
+      table.table.table-striped.border.mb-0
+        thead.fw-semibold.text-nowrap
+          tr.align-middle
+            th.bg-body-secondary Miners
+            th.bg-body-secondary Wallet
+            th.bg-body-secondary(title="Percentage of total contribution") Prct. (P3TI)
+            th.bg-body-secondary Payment (Qubic)
+            th.bg-body-secondary Sent
+        tbody
+          if data.currentUser.length
+            tr.fw-bolder
+              td.text-info= data.currentUser[0]
+              td.text-info= data.currentUser[1]
+              td.text-info #{data.currentUser[2]}%
+              td.text-info= data.currentUser[3]
+              td.text-info #{data.currentUser[4] ? 'yes' : 'no'}
+          each item in data.payments
+            tr
+              td= item[0]
+              td= item[1]
+              td #{item[2]}%
+              td= item[3]
+              td #{data.currentUser[4] ? 'yes' : 'no'}
+
+      

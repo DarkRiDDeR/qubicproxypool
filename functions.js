@@ -26,6 +26,10 @@ export function compareMinerVersion (v1, v2) {
     return -1
 }
 
+export function hideUsername (username) {
+    return username.slice(0, 3) + '******'
+}
+
 export function getPasswordHash(password) {
     return createHash('sha256').update('QubicPowerProxy' + password).digest('hex')
 }
@@ -257,7 +261,7 @@ export async function calculateStatistics(dbc, epoch, enableMinActivity = false)
     dbUsers.forEach((item) => {
         const userStat = userStatsEpoch.get(item[0])
         if (userStat) {
-            let procent = userStat[1] * 100 / totalActiveMinutes
+            let procent = userStat[1] / totalActiveMinutes // * 100
             procentSum += procent
             data.users[item[0]] = {
                 login: item[1],
@@ -288,7 +292,7 @@ export async function calculateStatistics(dbc, epoch, enableMinActivity = false)
         data.users[item[1]].workers.push([
             item[2],
             Math.round(stat[0] / stat[1]), // avg. hshrate, only activity minutes
-            Math.round(stat[1] / totalMinutes * 10000) / 100, // % activity
+            Math.round(stat[1] / totalMinutes * 10000) / 100, // Activity fraction
             stat[2].toISOString().split('.')[0], // start activity
             stat[3].toISOString().split('.')[0], // last activity
             stat[1] // active minutes

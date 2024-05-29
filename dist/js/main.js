@@ -292,5 +292,24 @@ if (elPanelWorkers) {
     console.error(err)
   }
 }
+
+const elPaySelect = document.querySelector('#payments-select-epoch')
+if (elPaySelect) {
+  const elPayContent = document.querySelector('#payments-content')
+
+  const loadPayments = async (epoch) => {
+    let res = await fetch('/api/payments/' + epoch + '/')
+    elPayContent.innerHTML = await res.text()
+  }
+  loadPayments(elPaySelect.value)
+  try {
+    elPaySelect.addEventListener('change', e => {
+      loadPayments(e.target.value)
+    })
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 //# sourceMappingURL=main.js.map
 

@@ -80,13 +80,45 @@ if (argv[2] == 'install') {
 
 } else if (argv[2] == 'calc') { // epoch, enableMinActivity = false
     let data = await calculateStatistics(dbc, argv[3], argv[4] === 'true' || argv[4] === '1')
-    if (!data.users.length) console.log([])
+    if (!data.users) {
+        console.log([])
+    } else {
+        const [rows] = await dbc.query({sql: 'SELECT id, login, wallet FROM users WHERE id IN (' + Object.keys(data.users).join(',') + ') ORDER BY login', rowsAsArray: true})
+        rows.forEach(row => {
+            console.log(row[1] + '   ' + data.users[row[0]].statistics[1] + '   ' + row[2])
+        })
+    }
 
-    const [rows] = await dbc.query({sql: 'SELECT id, login, wallet FROM users WHERE id IN (' + Object.keys(data.users).join(',') + ') ORDER BY login', rowsAsArray: true})
-    rows.forEach(row => {
-        console.log(row[1] + '   ' + data.users[row[0]].statistics[1] + '   ' + row[2])
-    })
+} else if (argv[2] == 'calc-payment' && argv[3] && argv[4]) { // epoch, tatal Qubics
+    let epoch = parseInt(argv[3])
+    let qubic = parseInt(argv[4])
+    let calcData = await calculateStatistics(dbc, epoch, true)
+    
+    if (!calcData.users) {
+        console.log([])
+    } else {
+        let sql = `(1, '${epoch}', '', '${qubic}', '100')`
+        let commission = Math.round(qubic * confQubic.commissionOfProxyPool)
+        console.log('Total: ' + qubic)
+        console.log('Commission: ' + commission)
+        console.log()
+        qubic -= commission
 
+        await dbc.query('DELETE FROM payments WHERE epoch = ?', [epoch])
+        const [rows] = await dbc.query({sql: 'SELECT id, login, wallet FROM users WHERE id IN (' + Object.keys(calcData.users).join(',') + ') ORDER BY login', rowsAsArray: true})
+        rows.forEach(row => {
+            console.log(row[1] + '   ' + calcData.users[row[0]].statistics[1] + '   ' + row[2])
+            let minerQubuc = Math.round(calcData.users[row[0]].statistics[1] * qubic)
+            sql += `, ('${row[0]}', '${epoch}', '${row[2]}', '${minerQubuc}', '${calcData.users[row[0]].statistics[1] * 100}')`
+        })
+        const [result] = await dbc.query('INSERT INTO payments(user_id, epoch, wallet, value, percentage) VALUES ' + sql + ';')
+        console.log(result)
+    }
+
+} else if (argv[2] == 'payment-flag-sent' && argv[3]) {
+    let epoch = parseInt(argv[3])
+    const [rows] = await dbc.query('UPDATE payments SET isSent = TRUE WHERE epoch = ?', [epoch])
+    console.log(rows.info)
 } else if (argv[2] == 'detect-old-verion') {
     let epoch = argv[3]
     if (!epoch) {

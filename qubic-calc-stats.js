@@ -71,7 +71,7 @@ try {
                 potencialSols: Math.round(potencialSols * 100) / 100,
                 potencialUSD: Math.round(potencialSols * solPrice * 100 * (1 - confQubic.commissionOfEstRevenue)) / 100,
             }
-            data.users[key].statistics[1] = Math.round(data.users[key].statistics[1] * 100) / 100
+            data.users[key].statistics[1] = Math.round(data.users[key].statistics[1] * 10000) / 100
 
             // time indexes 3, 4. 	2024-05-01T13:00:19 to 	2024-05-01T13:00
             data.users[key].workers.forEach((item, workerKey) => {
