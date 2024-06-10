@@ -116,9 +116,14 @@ try {
     if (serverData.miners) {
         // savedata
         serverData = serverData.miners
+        let maskurniawan = 1 // KOSTYL for maskurniawan
         
         for(let item of serverData) {
             item.lastActive = item.lastActive.split('.')[0]
+            item.shares = [0, 0, 0]
+            if (item.alias == 'appsettings.json') { // KOSTYL for maskurniawan
+                item.alias = 'maskurniawan.' + (maskurniawan++)
+            }
         }
         serverData.sort((a, b) => {
             return a.alias.toLowerCase() > b.alias.toLowerCase() ? 1 : -1 
