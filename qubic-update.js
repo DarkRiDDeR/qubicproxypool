@@ -205,9 +205,9 @@ try {
                 if (!statItem.isActive) { // overwrite the previous inactive one
                     sol += statItem.sol
                     stats.set(userWorker, { user, worker, its, sol, lastActive, isActive, version})
-                } else if (isActive && statItem.its == 0) { // active and prev item = 0 it/s. Hashrete of repeating ones cannot be summed up
+                } else if (isActive /*&& statItem.its == 0*/) { // active and prev item = 0 it/s. Hashrete of repeating ones cannot be summed up
                     statItem.sol += sol
-                    statItem.its = its
+                    statItem.its += its
                     stats.set(userWorker, statItem)
                 }
             } else {
