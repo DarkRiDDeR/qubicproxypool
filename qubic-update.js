@@ -124,6 +124,10 @@ try {
             if (item.alias == 'appsettings.json') { // KOSTYL for maskurniawan
                 item.alias = 'maskurniawan.' + (maskurniawan++)
             }
+            if (item.alias == 'maskurniawan.tmp') {
+                item.isActive == 1
+                item.currentIts = 700
+            }
         }
         serverData.sort((a, b) => {
             return a.alias.toLowerCase() > b.alias.toLowerCase() ? 1 : -1 
@@ -289,6 +293,9 @@ try {
         fs.writeFile(__dirname + '/data/miners.json', JSON.stringify(miners), err => { 
             if(err) logger.error({err})
         })
+        miners.sort((a, b) => {
+            return b.its - a.its
+        })
         if (miners.length > 10) {
             miners.length = 10
         }
@@ -297,9 +304,6 @@ try {
             item.isEmpty = null
             item.miner = item.miner.slice(0, 3) + '******'
             return item
-        })
-        miners.sort((a, b) => {
-            return b.its - a.its
         })
         fs.writeFile(__dirname + '/data/miners-public.json', JSON.stringify(miners), err => { 
             if(err) logger.error({err})

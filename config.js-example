@@ -13,6 +13,7 @@ export const confQubic = {
     minVersion: '1.9.5',
     minActiveMinutes: 3000,//720,
     commissionOfEstRevenue: 0.16,
+    commissionOfProxyPool: 0.01 // for payments
     //specificDataServer: 'http://stanvps.ddns.net:8100/receive.txt'
 }
 export const confUsers = {

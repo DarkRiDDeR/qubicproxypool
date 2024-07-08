@@ -115,7 +115,7 @@ if (argv[2] == 'install') {
         console.log(result)
     }
 
-} else if (argv[2] == 'payment-flag-sent' && argv[3]) {
+} else if (argv[2] == 'payments-flag-sent' && argv[3]) {
     let epoch = parseInt(argv[3])
     const [rows] = await dbc.query('UPDATE payments SET isSent = TRUE WHERE epoch = ?', [epoch])
     console.log(rows.info)
