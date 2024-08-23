@@ -1,6 +1,8 @@
 
 h2  Pool rules
 ul
+  li
+    b Only friends. Hashrate without taking into account the share during mining is not a reliable indicator and can only be taken into account by people you trust.
   li Active pool - qubic.li CPU/GPU Mining (Fixed Reward 85%)
   li The commission of Qubic.li  - 15%
   li Intermediary commission of QubicProxyPool - 1%
@@ -8,7 +10,6 @@ ul
   li The first hour of the new epoch is not taken into account due to the transition and connection of new miners
   li.fw-bolder The minimum total worker accounting time for an epoch is 2 days
   li Payouts are made after the epoch has ended (Wednesday 12 UTC), need time to calculate. Without any abnormal activitiy and a stable network, QubicProxyPool will get Qubic coins until Friday (23:59 UTC).  Then payments will be made to users
-  li Frequent disconnections and connections to the pool can lead to a ban! Stable mining is important. Pool-hoppers and similar personalities are not needed
   li For Qubic cryptocurrency payments, be sure to specify your wallet (not exchange), registered on the official resource
     | 
     a(href="https://wallet.qubic.li" target="_blank") https://wallet.qubic.li
@@ -56,7 +57,6 @@ br
 h2 P3TI reward system
 p The pool uses the P3TI (Payment per performance for time intervals) system to calculate rewards.
 p The pool calculates the reward for the average perfomance (estimated at it/s) in a certain time interval, regardless of whether the pool found a solution or not. Time intervals are evenly distributed across the epoch. That is, a miner who had a stable perfomance (estimated at it/s) throughout the epoch will receive a greater reward than those who joined during the epoch or had fluctuating perfomance.
-p The PPLNS (Pay-Per-Last-N-Shares ) payout system on the qubic network is not very good that finding solutions (sol) is not equal to finding standard blocks when mining cryptocurrency. The number of solutions paid for the work of a miner can change when the algorithm changes, i.e. the price of a solution can be different during the epoch. And also in the Qubic network a stable hashrate over a long distance is important. PPLNS in the qubic network carries a potential loss of part of the income.
 
 
 p.d-inline-flex.gap-1

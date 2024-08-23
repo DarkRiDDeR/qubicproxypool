@@ -1,6 +1,6 @@
 {
   "name": "qubicproxypool",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "type": "module",
   "description": "",
   "main": "serve.js",
@@ -17,7 +17,7 @@
     "qubic"
   ],
   "author": "darkridder",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "dependencies": {
     "coingecko-api-v3": "^0.0.29",
     "compression": "^1.7.4",

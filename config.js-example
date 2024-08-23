@@ -11,7 +11,7 @@ export const confQubic = {
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0',
     cleaningAfterInactivity: 2160000000, // 600 hours
     minVersion: '1.9.5',
-    minActiveMinutes: 3000,//720,
+    minActiveMinutes: 2880,//720,
     commissionOfEstRevenue: 0.16,
     commissionOfProxyPool: 0.01 // for payments
     //specificDataServer: 'http://stanvps.ddns.net:8100/receive.txt'
@@ -21,8 +21,8 @@ export const confUsers = {
     resetCodeActivity: 720, // minutes
     initDbUsers: [
         ['none', '', 'pass', ''], // no detect user for worker
-        ['admin', 'admin', 'pass', 'KNIJXAGWQREUSFCFOHGRBAZNAQZAILFQBPFRVWPOECGPFNATPBDOCWUCZKMN'],
-        ['darkwi', 'user', 'pass', 'WLTCJKFLTBPZYFITIIUOMJOHSNRBDUEPMKPPPKEKAHVCCFNWWKKWVVIHIYVJ']
+        ['admin', 'admin@example.com', 'pass', 'KNIJXAGWQREUSFCFOHGRBAZNAQZAILFQBPFRVWPOECGPFNATPBDOCWUCZKMN'],
+        ['darkwi', 'user@example.com', 'pass', 'WLTCJKFLTBPZYFITIIUOMJOHSNRBDUEPMKPPPKEKAHVCCFNWWKKWVVIHIYVJ']
     ],
 }
 
